@@ -57,9 +57,9 @@ Un VLAN dédié est également prévu pour les serveurs, un autre pour l’admin
 |VLAN 10|DSI|Réseau des utilisateurs du service informatique|172.16.10.0/24|
 |VLAN 12|Comptabilité|Réseau des utilisateurs du service comptabilité|172.16.12.0/24|
 |VLAN 14|Communication|Réseau des utilisateurs du service communication|172.16.14.0/24|
-|VLAN 100|Serveurs|Réseau des serveurs internes|À définir|
-|VLAN 150|Administration|Réseau réservé à l’administration de l’infrastructure|À définir|
-|VLAN 200|À définir|Réseau réservé pour un besoin futur|À définir|
+|VLAN 100|Serveurs|Réseau des serveurs internes|172.16.100.0/16|
+|VLAN 150|Administration|Réseau réservé à l’administration de l’infrastructure|172.16.150.0/16|
+|VLAN 200|Stockage|Réseau réservé pour le stockage|172.16.200.0/16|
 
 ---
 
