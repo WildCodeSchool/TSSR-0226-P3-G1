@@ -46,7 +46,7 @@ Un VLAN dédié est également prévu pour les serveurs, un autre pour l’admin
 ## 3 Schéma réseau 
 
 Ici, un schéma réseau représentant le VLAN Dev , le VLAN Server AD/DS, DNS et DHCP, ainsi que les routeurs et les switch
-![SCHEMA_RESEAU](SCHEMA_RESEAU.png)
+![SCHEMA_RESEAU](ressources/SCHEMA_RESEAU.png)
 
 ## 4. Découpage des VLAN
 
