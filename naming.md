@@ -1,8 +1,15 @@
 # Sommaire
-
+- [**1. Présentation du document**](#1-présentation-du-document)
+- [**2. Nom des matériels**](#2-nom-des-matériels)
+- [**3. Nom des ordinateurs (VM/CT)**](#3-nom-des-ordinateurs-vmct)
+- [**4.Active Directory**](#4-active-directory)
+  - [**4.1 Nom des utilisateurs**](#41-nom-des-utilisateurs)
+  - [**4.2 Nom des groupes**](#42-nom-des-groupes)
+  - [**4.3 Nom des Unités d'Organisation**](#43-nom-des-unités-dorganisation)
+  - [**4.4 Nom des GPO**](#44-nom-des-gpo)
 # 1. Présentation du document
 
-Ce document a pour but de recenser différentes conventions de nommage de l'infrastructure du projet. 
+*Ce document a pour but de recenser différentes conventions de nommage de l'infrastructure du projet.* 
 # 2. Nom des matériels
 
 Pour les serveur , nous avons choisis d'offusquer leurs noms de cette façon : 
