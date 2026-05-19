@@ -1,32 +1,62 @@
-# Decoupage des VLAN 
-## VLAN Utilisateurs
+## Decoupage des VLAN 
+### VLAN Utilisateurs
 Les VLAN utilisateurs sont découpés en fonction des besoins de chaque services. Le choix des plages IP sont adaptées aux nombre de personnes et prennent en compte les possiblités de croissance futurs.
 Ils sont répartis comme suit:
 
 - VLAN 2: Developpement   
 Réseau: 172.16.2.0/24   
-IP: de 172.16.2.2 à 172.16.2.254 soit 252 ip disponibles
+IP: de 172.16.2.1 à 172.16.2.254 soit 252 ip disponibles
 
 - VLAN 4: Juridique  
 Réseau: 172.16.4.0/24  
-IP: de 172.16.4.2 à 172.16.4.62 soit 60 adresses ip disponibles
+IP: de 172.16.4.1 à 172.16.4.63 soit 62 ip disponibles
 
 - VLAN 6: Direction + QHSE + Recrutement   
 Réseau: 172.16.6.0/24   
-IP: de 172.16.6.2 à 172.16.6.62 soit 60 ip disponibles
+IP: de 172.16.6.1 à 172.16.6.63 soit 62 ip disponibles
 
 - VLAN 8: Commercial  
 Réseau: 172.16.8.0/24   
-IP: de 172.16.8.2 à 172.16.8.124 soit 122 ip disponibles
+IP: de 172.16.8.1 à 172.16.8.127 soit 126 ip disponibles
 
 - VLAN 10: DSI  
 Réseau: 172.16.10.0/24   
-IP: de 172.16.10.2 à 172.16.10.62 soit 60 ip disponibles
+IP: de 172.16.10.1 à 172.16.10.63 soit 62 ip disponibles
 
 - VLAN 12: Cmptabilité  
 Réseau: 172.16.12.0/26   
-IP: de 172.16.12.2 à 172.16.12.62 soit 60 ip disponibles
+IP: de 172.16.12.1 à 172.16.12.63 soit 62 ip disponibles
 
 - VLAN 14: Communication  
 Réseau: 172.16.14.0/26   
-IP: de 172.16.14.2 à 172.16.14.62 soit 60 ip disponibles
+IP: de 172.16.14.1 à 172.16.14.63 soit 62 ip disponibles
+
+### VLAN Servers
+Les VLAN serveurs ont été nommés et decoupés afin de repondre aux besoins de sécurités et d'isolations
+
+- VLAN 130: Regroupe entre autres les serveurs AD/DS DNS et DHCP mais pourra aussi d'autres serveurs selon les besoins
+Réseau: 172.16.130.0/24
+IP: de 172.16.130.1 à 172.16.130.254 soit 254 ip disponibles
+
+- VLAN 140: ADMIN VLAN spécial d'aministration 
+Réseau: 172.16.140.0/24   
+IP: de 172.16.140.1 à 172.16.140.254 soit 254 ip disponibles
+
+- VLAN 150: STOCKAGE Regroupe nos serveurs de stockage
+Réseau: 172.16.150.0/24   
+IP: de 172.16.150.1 à 172.16.150.254 soit 254 ip disponibles
+
+## Configuration IP des materiels
+### Adresses IP des routeurs:
+R0 : Routeur principal des serveurs   
+Interfaces:  
+g0/1: 172.16.128.1  
+g0/0: 10.0.0.2  
+
+R1 : Routeur faissant le lien entre les utilisateurs, les serveurs et le bastion  
+g0/0: 192.168.1.1  
+g0/1: 10.0.0.1  
+g0/2: 172.16.127.254  
+
+Firewall/Bastion: En construction  
+g0/1: 192.168.1.2  
