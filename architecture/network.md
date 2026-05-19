@@ -59,9 +59,9 @@ Ici, un schéma réseau représentant le VLAN Dev , le VLAN Server AD/DS, DNS et
 |VLAN 10|DSI|Réseau des utilisateurs du service informatique|172.16.10.0/24|
 |VLAN 12|Comptabilité|Réseau des utilisateurs du service comptabilité|172.16.12.0/24|
 |VLAN 14|Communication|Réseau des utilisateurs du service communication|172.16.14.0/24|
-|VLAN 100|Serveurs|Réseau des serveurs internes|172.16.100.0/16|
-|VLAN 150|Administration|Réseau réservé à l’administration de l’infrastructure|172.16.150.0/16|
-|VLAN 200|Stockage|Réseau réservé pour le stockage|172.16.200.0/16|
+|VLAN 130|Serveurs|Réseau des serveurs interne|172.16.130.0/17|
+|VLAN 140|Administration|Réseau réservé à l’administration de l’infrastructure|172.16.140.0/17|
+|VLAN 150|Stockage|Réseau réservé pour le stockage|172.16.150.0/17|
 
 ---
 
@@ -83,7 +83,7 @@ Cette organisation permet de limiter les communications inutiles entre services 
 
 ### 5.2 VLAN serveurs
 
-Le VLAN 100 est réservé aux serveurs internes.
+Le VLAN 130 est réservé aux serveurs internes.
 
 Il pourra contenir notamment :
 
@@ -100,7 +100,7 @@ Ce VLAN doit être protégé car il contient les services essentiels au fonction
 
 ### 5.3 VLAN administration
 
-Le VLAN 150 est réservé aux tâches d’administration.
+Le VLAN 140 est réservé aux tâches d’administration.
 
 Il doit permettre aux administrateurs d’accéder aux équipements et serveurs nécessaires à la gestion de l’infrastructure.
 
@@ -176,11 +176,11 @@ Les services réseau suivants sont prévus dans l’infrastructure :
 
 |Service|Rôle|Emplacement prévu|
 |---|---|---|
-|AD DS|Gestion du domaine Active Directory|VLAN 100|
-|DNS|Résolution de noms interne|VLAN 100|
-|DHCP|Attribution automatique des adresses IP|VLAN 100|
-|Supervision|Surveillance de l’infrastructure|VLAN 100|
-|Sauvegarde|Protection et restauration des données|VLAN 100|
+|AD DS|Gestion du domaine Active Directory|VLAN 130|
+|DNS|Résolution de noms interne|VLAN 130|
+|DHCP|Attribution automatique des adresses IP|VLAN 130|
+|Supervision|Surveillance de l’infrastructure|VLAN 130|
+|Sauvegarde|Protection et restauration des données|VLAN 130|
 |Pare-feu|Filtrage et sécurité réseau|Périmètre réseau|
 |Bastion|Administration sécurisée|Zone d’administration / périmètre sécurisé|
 
