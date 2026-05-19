@@ -34,15 +34,15 @@ IP: de 172.16.14.1 à 172.16.14.63 soit 62 ip disponibles
 ### VLAN Servers
 Les VLAN serveurs ont été nommés et decoupés afin de repondre aux besoins de sécurités et d'isolations
 
-- VLAN 130: Regroupe entre autres les serveurs AD/DS DNS et DHCP mais pourra aussi d'autres serveurs selon les besoins
+- VLAN 130: Regroupe entre autres les serveurs AD/DS DNS et DHCP mais pourra aussi d'autres serveurs selon les besoins  
 Réseau: 172.16.130.0/24
 IP: de 172.16.130.1 à 172.16.130.254 soit 254 ip disponibles
 
-- VLAN 140: ADMIN VLAN spécial d'aministration 
+- VLAN 140: ADMIN VLAN spécial d'aministration   
 Réseau: 172.16.140.0/24   
 IP: de 172.16.140.1 à 172.16.140.254 soit 254 ip disponibles
 
-- VLAN 150: STOCKAGE Regroupe nos serveurs de stockage
+- VLAN 150: STOCKAGE Regroupe nos serveurs de stockage  
 Réseau: 172.16.150.0/24   
 IP: de 172.16.150.1 à 172.16.150.254 soit 254 ip disponibles
 
