@@ -124,7 +124,7 @@ Pour le nommage des utilisateurs dans **l'Active Directory**, nous avons choisis
 
 `nom.prenom` 
 
-Exemple : `gaillard.remy`
+Exemple : `gaillard.remi`
 
 - en minuscules
 - sans accents
@@ -134,8 +134,8 @@ Exemple : `gaillard.remy`
 En cas d’homonymie : `nom.prenom.date_de_naissance (au format DDMMYYYY)`
 Les comptes utilisateurs sont personnels et non partagés.
 
-Exemple : `gaillard.remy`
-		 `gaillard.remy.01031988`
+Exemple : `gaillard.remi`
+		 `gaillard.remi.01031988`
 
 ## Comptes administrateurs
 
@@ -147,8 +147,8 @@ Exemple : `gaillard.remy.spe`
 
 | Type           | Nom               |
 | -------------- | ----------------- |
-| Utilisateur    | gaillard.remy     |
-| Administrateur | gaillard.remy.spe |
+| Utilisateur    | gaillard.remi     |
+| Administrateur | gaillard.remi.spe |
 
 ## 4.2 Nom des groupes
 ## 4.3 Nom des Unités d'Organisation
