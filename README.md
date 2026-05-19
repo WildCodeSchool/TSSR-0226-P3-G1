@@ -47,11 +47,31 @@ C'est pour cela qu'une **refonte complète de l'infrastructure réseau** est né
 # 3. Objectifs finaux
 
 ## 3.1 Objectifs principaux
+- Analyse du sujet d'entreprise
 ## 3.2 Objectifs secondaires
 
 # 4. Vue d'ensemble des composants
 
+L'infrastructure cible reposera sur :
+
+- Une **architecture réseau** segmentée par VLANs
+- Un **domaine Active Directory** pour la gestion centralisée des identités
+- Des **services d’infrastructure** dédiés (DNS, DHCP, fichiers, sauvegarde)
+- Une séparation claire des rôles
+- Une infrastructure **sécurisée, évolutive et documentée**
+- Les détails techniques sont volontairement **non décrits ici** et sont disponibles dans la documentation dédiée.
+
 # 5. Services déployés
+
+Les principaux services mis en place dans le cadre du projet sont :
+
+- Active Directory Domain Service (AD DS)
+- DNS
+- DHCP
+- Serveur de fichiers
+- Services de sauvegarde
+- Outils d'administration
+- Infrastructure réseau (VLAN, routage, pare-feu)
 
 # 6. Organisation de la documentation
 
