@@ -13,7 +13,7 @@ Le projet est conditionné comme dans un contexte professionnel réel, avec une 
 
 # 2. Schéma global de l'infrastucture
 
-![SCHEMA_PROVISOIRE](ressources/SCHEMA_LOGIE.png)
+![SCHEMA_PROVISOIRE](ressources/SCHEMA_LOGIQUE.png)
 
 # 3. Liste des briques techniques
 
