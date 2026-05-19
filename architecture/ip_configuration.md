@@ -48,15 +48,15 @@ IP: de 172.16.150.1 à 172.16.150.254 soit 254 ip disponibles
 
 ## Configuration IP des materiels
 ### Adresses IP des routeurs:
-R0 : Routeur principal des serveurs   
+- R0 : Routeur principal des serveurs   
 Interfaces:  
 g0/1: 172.16.128.1  
 g0/0: 10.0.0.2  
 
-R1 : Routeur faissant le lien entre les utilisateurs, les serveurs et le bastion  
+- R1 : Routeur faissant le lien entre les utilisateurs, les serveurs et le bastion  
 g0/0: 192.168.1.1  
 g0/1: 10.0.0.1  
 g0/2: 172.16.127.254  
 
-Firewall/Bastion: En construction  
+- Firewall/Bastion: En construction  
 g0/1: 192.168.1.2  
