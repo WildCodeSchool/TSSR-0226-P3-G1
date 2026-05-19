@@ -44,7 +44,7 @@ Ils sont répartis comme suit:
 Les VLAN serveurs ont été nommés et decoupés afin de repondre aux besoins de sécurités et d'isolations
 
 - **VLAN 130 - Regroupe entre autres les serveurs AD/DS DNS et DHCP mais pourra aussi d'autres serveurs selon les besoins**  
-**Réseau :** 172.16.130.0/24
+**Réseau :** 172.16.130.0/24  
 **IP :** de 172.16.130.1 à 172.16.130.254 soit 254 ip disponibles
 
 - **VLAN 140 - ADMIN VLAN spécial d'aministration**  
