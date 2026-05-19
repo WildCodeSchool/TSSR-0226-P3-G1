@@ -23,7 +23,7 @@ Ils sont répartis comme suit:
 **Réseau :** 172.16.6.0/24   
 **IP :** de 172.16.6.1 à 172.16.6.63, *soit 62 ip disponibles*
 
-- **VLAN 8 - Commercial** 
+- **VLAN 8 - Commercial**   
 **Réseau :** 172.16.8.0/24   
 **IP :** de 172.16.8.1 à 172.16.8.127, *soit 126 ip disponibles*
 
