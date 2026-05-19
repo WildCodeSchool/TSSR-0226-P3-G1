@@ -51,9 +51,9 @@ Les VLAN serveurs ont été nommés et decoupés afin de repondre aux besoins de
 **Réseau :** 172.16.140.0/24   
 **IP :** de 172.16.140.1 à 172.16.140.254, *soit 254 ip disponibles*
 
-- **VLAN 150 - STOCKAGE Regroupe nos serveurs de stockage**
+- **VLAN 150 - STOCKAGE Regroupe nos serveurs de stockage**  
 **Réseau :** 172.16.150.0/24   
-**IP :** de 172.16.150.1 à 172.16.150.254, *soit 254 ip disponibles*
+**IP :** de 172.16.150.1 à 172.16.150.254, *soit 254 ip disponibles*  
 
 # 2. Configuration IP des materiels
 
