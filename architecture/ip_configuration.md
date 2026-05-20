@@ -63,10 +63,14 @@ Les VLAN serveurs ont été nommés et decoupés afin de repondre aux besoins de
 g0/1 : 172.16.128.1  
 g0/0 : 10.0.0.2  
 
-- **R1 - Routeur faissant le lien entre les utilisateurs, les serveurs et le bastion**  
+- **R1 - Routeur faissant le lien entre les serveurs et le bastion**    
 g0/0 : 192.168.1.1  
 g0/1 : 10.0.0.1  
-g0/2 : 172.16.127.254  
+g0/2 : 10.0.1.1
+
+- **R2 - Routeur faisant le lien entre les utilisateurs et le Routeur coeur de réseau**  
+g0/0 : 172.16.127.254  
+g0/1 : 10.0.1.2
 
 - **Firewall/Bastion - En construction**  
 g0/1 : 192.168.1.2  
