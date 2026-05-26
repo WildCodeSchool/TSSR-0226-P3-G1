@@ -1,6 +1,7 @@
 ## Installation et configuration du rôle DHCP
 
-Pour commencer on va ajouter sur notre serveur Windows 2022 le role DHCP:R
+Pour commencer on va ajouter sur notre serveur Windows 2022 le role DHCP:
+
 ![Manage](Ressources/ajout-role-2.png)
 
  Dans manage on va selectionner add Roles and features. Puis on va suivre l'assistant jusqu'a la selection des rôles:
