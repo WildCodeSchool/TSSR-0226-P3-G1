@@ -17,7 +17,7 @@ Pour commencer on va ajouter sur notre serveur Windows 2022 le role DHCP:
 
  ![scope](Ressources/dhcp2.png)
 
- Cela va nous permettre de selectionner la plage ip que l'on souhaite configurer ainsi que l'adresse de la passerelle par default ainsi que la reservation de plages ip si on en a besoin.
+ Cela va nous permettre de selectionner la plage ip que l'on souhaite configurer ainsi que l'adresse de la passerelle par default et la reservation de plages ip si on en a besoin.
 
  Enfin on va réserver des adresses fixes pour nos serveurs en allant dans Réservation puis en ajoutant une nouvelle réservation d'ip:
 
