@@ -48,6 +48,6 @@ Ce serveur permet :
 # 4. Structure de la documentation
 
 - **README.md** : Ce fichier
-- **[Install.md](components/Ressources/Install.md)** : Fichier d'installation des logiciels
+- **[Install.md](Ressources/Install.md)** : Fichier d'installation des logiciels
 
 
