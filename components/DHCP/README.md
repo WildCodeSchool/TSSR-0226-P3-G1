@@ -19,11 +19,10 @@ Le **serveur DHCP** est le serveur qui va distribuer les ip de tout le reseau in
 
 # 2. Objectifs
 
-Ce PC d'administration permet : 
+Ce serveur permet : 
 
 - **Centralisation** : Point d'accès unique pour la gestion des bails ip
-- **Internet** : Permet la distribution de la passrelle par defaut pour acceder au WAN
-
+- **Distribution** : Distribue une configuration reseau pour tout les pc qu'il gere avec entre autre la passerelle par defaut
 ## Périmètre d'administration
 
 - **VLAN utilisateur** : Distribue une plage ip de 172.16.10.25 à 172.16.10.50 aux differents terminaux utilisateurs
@@ -49,6 +48,6 @@ Ce PC d'administration permet :
 # 4. Structure de la documentation
 
 - **README.md** : Ce fichier
-- **[installation.md](components/Ressources/Install.md)** : Fichier d'installation des logiciels
+- **[Install.md](components/Ressources/Install.md)** : Fichier d'installation des logiciels
 
 
