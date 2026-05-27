@@ -64,4 +64,7 @@ Il nous a permis de renforcer notre domaine grâce à des regles de securités p
 
 #### Exemple: PSO
 Un exemple avec les PSO suivantes sur les mp ou sur les comptes admin
+![HelloMyDir](Ressources/pso.png)
 
+Vous pouvez retrouver toute l'installation et la configuration sur ce tuto:
+https://www.it-connect.fr/comment-creer-un-domaine-active-directory-respectueux-des-bonnes-pratiques-de-securite/
