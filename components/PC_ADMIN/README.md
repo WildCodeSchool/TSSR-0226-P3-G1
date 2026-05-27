@@ -57,8 +57,8 @@ Ce PC d'administration permet :
 # 4. Structure de la documentation
 
 - **README.md** : Ce fichier
-- **[installation.md](PC_ADMIN/installation.md)** : Fichier d'installation des logiciels
-- **[configuration.md](components/PC_ADMIN/configuration.md)** : Fichier de configuration des logiciels installés 
+- **[installation.md](/components/PC_ADMIN/installation.md)** : Fichier d'installation des logiciels
+- **[configuration.md](/components/PC_ADMIN/configuration.md)** : Fichier de configuration des logiciels installés 
 
 # 5. Fonctionnalités et logiciels installés 
 
