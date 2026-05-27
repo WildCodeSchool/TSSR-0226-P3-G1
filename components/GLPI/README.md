@@ -1,3 +1,12 @@
+# Sommaire
+
+- [**1. Vue d'ensemble**](#1-vue-densemble)
+- [**2. Objectifs**](#2-objectifs)
+- [**3. Architecture**](#3-architecture)
+- [**4. Structure de la documentation**](#4-structure-de-la-documentation)
+- [**5. Services installés**](#5-services-installés)
+- [**6. Références**](#6-références)
+
 # 1. Vue d'ensemble
 
 Ce document présente l'installation et la configuration complète de GLPI (Gestionnaire Libre de Parc Informatique) pour l'entreprise BillU.
