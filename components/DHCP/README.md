@@ -48,6 +48,6 @@ Ce serveur permet :
 # 4. Structure de la documentation
 
 - **README.md** : Ce fichier
-- **[Install.md](DHCP/Install.md)** : Fichier d'installation des logiciels
+- **[Install.md](components/DHCP/Install.md)** : Fichier d'installation des logiciels
 
 
