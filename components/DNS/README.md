@@ -26,7 +26,7 @@ Ce PC d'administration permet :
 
 ## Périmètre d'administration
 
-- L'administration est deléguée aux seul admins sytemes et reseau de habilités
+- L'administration est deléguée aux seuls admins sytemes et reseau habilités
 
 # 3. Architecture 
 
