@@ -52,8 +52,8 @@ Le serveur AD-DS va permettre la gestion de notre architecture
 # 4. Structure de la documentation
 
 - **README.md** : Ce fichier
-- **[installation.md](/components/PC_ADMIN/installation.md)** : Fichier d'installation des logiciels
-- **[configuration.md](/components/PC_ADMIN/configuration.md)** : Fichier de configuration des logiciels installés 
+- **[installation.md](installation.md)** : Fichier d'installation des logiciels
+- **[configuration.md](configuration.md)** : Fichier de configuration des logiciels installés 
 
 # 5. Fonctionnalités et logiciels installés 
 
