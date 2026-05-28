@@ -124,6 +124,7 @@ Try {
 # Etape 5 : Test de connectivite
 Write-Log "Test de connectivite vers $($Config.DNSServer)..." "INFO"
 $PingResult = Test-Connection -ComputerName $Config.DNSServer -Count 2 -Quiet
+Start-Sleep -Seconds 10
 If (-not $PingResult) {
     Exit-OnError "Impossible de joindre le DC principal ($($Config.DNSServer))."
 }
