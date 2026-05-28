@@ -24,23 +24,23 @@ Nous avons ensuite continuer en configurant nos differentes GPO que vous nous av
 
 ### Les GPO sécurité:
 
--Politique de mot de passe (complexité, longueur, etc.):
+- Politique de mot de passe (complexité, longueur, etc.):
 
 ![password](Ressources/gpo-password.png)
 
--Restriction d'installation de logiciel pour les utilisateurs:
+- Restriction d'installation de logiciel pour les utilisateurs:
 
 ![Restriction](Ressources/gpo-logicielrestriction.png)
 
--Blocage de l'accès à la base de registre:
+- Blocage de l'accès à la base de registre:
 
 ![registry](Ressources/gpo-registryblock.png)
 
--Blocage complet ou partiel au panneau de configuration:
+- Blocage complet ou partiel au panneau de configuration:
 
 ![controlpanel](Ressources/gpo-controlpanel.png)
 
--Restriction des périphériques amovible:
+- Restriction des périphériques amovible:
 
 ![peripheriques](Ressources/gpo-devicerestriction.png)
 
@@ -48,11 +48,11 @@ ainsi que:
 
 ![peripheriques2](Ressources/gpo-devicerestriction-2.png)
 
--Gestion du pare-feu:
+- Gestion du pare-feu:
 
 ![FW](Ressources/gpo-FW-lvl1.png)
 
--Forçage du type d'utilisation sécurisée du bureau à distance:
+- Forçage du type d'utilisation sécurisée du bureau à distance:
 Nous avons renforcer fortement les connexions rdp avec authentification et encryption:
 
 ![RDP](Ressources/gpo-rdp.png)
@@ -61,25 +61,25 @@ mais aussi avec des logs
 
 ![RDP2](Ressources/gpo-rdp-2.png)
 
--Limitation des tentatives d'élévation de privilèges:
+- Limitation des tentatives d'élévation de privilèges:
 
 ![credential](Ressources/gpo-limitationcredential.png)
 
--Politique de sécurité PowerShell:
+- Politique de sécurité PowerShell:
 
 ![PS](Ressources/gpo-powershell.png)
 
 ### Les GPO Standards
 
--Mappage de lecteurs:
+- Mappage de lecteurs:
 
 ![lecteurs](Ressources/mappage-lecteur.png)
 
--Gestion de l'alimentation:
+- Gestion de l'alimentation:
 
 ![alimentation](Ressources/gpo-powermanagement.png)
 
--Fond d'écran:
+- Fond d'écran:
 
 ![wallpaper](Ressources/wallpaper.png)
 
