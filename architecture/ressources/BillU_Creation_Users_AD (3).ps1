@@ -157,7 +157,7 @@ Foreach ($User in $Users) {
                 Surname               = $Surname
                 EmailAddress          = $EmailAddress
                 Path                  = $Path
-                AccountPassword       = (ConvertTo-SecureString -AsPlainText "Azerty1*" -Force)
+                AccountPassword       = (ConvertTo-SecureString -AsPlainText "Azerty123!*" -Force)
                 Enabled               = $True
                 ChangePasswordAtLogon = $True
                 OtherAttributes       = @{
