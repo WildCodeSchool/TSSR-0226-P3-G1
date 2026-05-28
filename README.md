@@ -48,8 +48,18 @@ C'est pour cela qu'une **refonte complète de l'infrastructure réseau** est né
 
 ## 3.1 Objectifs principaux
 - Analyse du sujet d'entreprise
+- Création d'un domaine AD/DS
+- Mise en place d'un PC d'administration
+- Mise en place d'un serveur DNS
+- Mise en place d'un serveur DHCP
+- Mise en place des GPO
+- Logiciel de gestion de parc et de ticketing (GLPI)
+- Gestion d'un firewall pfSense
+- Mise en place du réseau de l'infrastructure (Switch/Routeur)
+  
 ## 3.2 Objectifs secondaires
-
+- Automatisation par script de l'installation du rôle AD/DS sur un serveur Windows Server Core
+- Synchronisation des objects avec l'AD sur GLPI
 # 4. Vue d'ensemble des composants
 
 L'infrastructure cible reposera sur :
