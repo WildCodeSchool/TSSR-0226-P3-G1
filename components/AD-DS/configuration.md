@@ -28,3 +28,20 @@ Appliquée sur l'OU : Serveur t1
 Appliquée au PC-admin
 
 ![](Ressources/pc-admin.png)
+
+
+## Application des differentes GPO aux groupes USERS et COMPUTERS correspondant:
+
+Afin d'appliquer nos gpo nouvellement crée il suffit de les link directement à l'OU sur laquelle on veut les appliquer:
+
+![](Ressources/link.png)
+
+Puis on observe que tout est bien ajouté:
+
+![](Ressources/applicationgpo.png)
+
+Et enfin on verifie directement sur un PC client de test que tou marche bien:
+
+![](Ressources/apli-gpo.png)
+
+![](Ressources/apli-gpo2.png)
