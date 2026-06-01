@@ -1,0 +1,13 @@
+{
+    "ServerName": "BV-130-105",
+    "IPAddress": "172.16.10.252",
+    "PrefixLength": 24,
+    "DefaultGateway": "172.16.10.254",
+    "DNSServer": "172.16.10.253",
+    "DomainName": "BillU.lan",
+    "NetbiosName": "BILLU",
+    "SiteName": "Default-First-Site-Name",
+    "DatabasePath": "C:\\Windows\\NTDS",
+    "LogPath": "C:\\Windows\\NTDS",
+    "SysvolPath": "C:\\Windows\\SYSVOL"
+}
