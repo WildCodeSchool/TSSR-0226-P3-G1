@@ -253,7 +253,7 @@ Le fichier **configuration.md** décrit notamment :
     
 4. Vérification des interfaces détectées par VyOS.
     
-5. Consultation du document **configuration.md**.
+5. Consultation du document [Configuration](https://github.com/WildCodeSchool/TSSR-0226-P3-G1/blob/main/components/VYOS/configuration.md).
     
 6. Configuration des adresses IP.
     
