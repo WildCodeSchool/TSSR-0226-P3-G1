@@ -1,9 +1,38 @@
+# Configuration du routage - Projet BillU
 
-# Configuration du routage
+## Objectif
+
+Cette documentation décrit la configuration des interfaces réseau et du routage statique entre les différents réseaux de l'infrastructure BillU.
+
+L'architecture repose sur trois routeurs VyOS :
+
+* R1 : Routeur cœur de réseau
+* R2 : Réseau Développement
+* R3 : Réseau Serveurs
+
+Le routage est assuré à l'aide de routes statiques.
+
+---
+
+# Architecture réseau
+
+## Réseaux utilisés
+
+| Bridge  | Réseau          | Description          |
+| ------- | --------------- | -------------------- |
+| vmbr100 | 10.0.2.0/24     | LAN BillU            |
+| vmbr101 | 10.0.1.0/30     | Liaison R1 ↔ R2      |
+| vmbr102 | 10.0.0.0/30     | Liaison R1 ↔ R3      |
+| vmbr103 | 172.16.0.0/17   | Réseau Développement |
+| vmbr104 | 172.16.128.0/17 | Réseau Serveurs      |
+
+---
+
+# Étape 1 - Configuration des interfaces
 
 ## Routeur R1 - Cœur de réseau
 
-### Configuration des interfaces
+### Configuration IP
 
 ```bash
 configure
@@ -16,23 +45,19 @@ commit
 save
 ```
 
-### Routes statiques
+### Description des interfaces
 
-```bash
-configure
-
-set protocols static route 172.16.0.0/17 next-hop 10.0.1.2
-set protocols static route 172.16.128.0/17 next-hop 10.0.0.2
-
-commit
-save
-```
+| Interface | Réseau          |
+| --------- | --------------- |
+| eth0      | LAN BillU       |
+| eth1      | Liaison vers R2 |
+| eth2      | Liaison vers R3 |
 
 ---
 
 ## Routeur R2 - Réseau Développement
 
-### Configuration des interfaces
+### Configuration IP
 
 ```bash
 configure
@@ -44,22 +69,18 @@ commit
 save
 ```
 
-### Route statique
+### Description des interfaces
 
-```bash
-configure
-
-set protocols static route 172.16.128.0/17 next-hop 10.0.1.1
-
-commit
-save
-```
+| Interface | Réseau               |
+| --------- | -------------------- |
+| eth0      | Liaison vers R1      |
+| eth1      | Réseau Développement |
 
 ---
 
 ## Routeur R3 - Réseau Serveurs
 
-### Configuration des interfaces
+### Configuration IP
 
 ```bash
 configure
@@ -71,7 +92,60 @@ commit
 save
 ```
 
-### Route statique
+### Description des interfaces
+
+| Interface | Réseau          |
+| --------- | --------------- |
+| eth0      | Liaison vers R1 |
+| eth1      | Réseau Serveurs |
+
+---
+
+# Étape 2 - Configuration des routes statiques
+
+## Routeur R1
+
+### Routes configurées
+
+```bash
+configure
+
+set protocols static route 172.16.0.0/17 next-hop 10.0.1.2
+set protocols static route 172.16.128.0/17 next-hop 10.0.0.2
+
+commit
+save
+```
+
+### Explication
+
+* Le réseau Développement est accessible via R2.
+* Le réseau Serveurs est accessible via R3.
+
+---
+
+## Routeur R2
+
+### Route configurée
+
+```bash
+configure
+
+set protocols static route 172.16.128.0/17 next-hop 10.0.1.1
+
+commit
+save
+```
+
+### Explication
+
+Le trafic destiné au réseau Serveurs est envoyé vers R1.
+
+---
+
+## Routeur R3
+
+### Route configurée
 
 ```bash
 configure
@@ -82,53 +156,168 @@ commit
 save
 ```
 
+### Explication
+
+Le trafic destiné au réseau Développement est envoyé vers R1.
+
 ---
 
-## Vérification
+# Étape 3 - Sauvegarde de la configuration
 
-### Afficher les interfaces
+Après chaque modification :
+
+```bash
+commit
+save
+```
+
+Sans la commande :
+
+```bash
+save
+```
+
+la configuration sera perdue après redémarrage du routeur.
+
+---
+
+# Étape 4 - Vérification du routage
+
+## Vérification des interfaces
 
 ```bash
 show interfaces
 ```
 
-### Afficher la table de routage
+Vérifier que toutes les interfaces sont présentes et possèdent la bonne adresse IP.
+
+---
+
+## Vérification des routes
 
 ```bash
 show ip route
 ```
 
-### Tests
+Résultat attendu :
 
-Depuis R2 :
+### R1
+
+```text
+172.16.0.0/17      via 10.0.1.2
+172.16.128.0/17    via 10.0.0.2
+```
+
+### R2
+
+```text
+172.16.128.0/17    via 10.0.1.1
+```
+
+### R3
+
+```text
+172.16.0.0/17      via 10.0.0.1
+```
+
+---
+
+# Étape 5 - Tests de connectivité
+
+## Tests depuis R2
+
+### Vérification du lien vers R1
 
 ```bash
 ping 10.0.1.1
+```
+
+### Vérification de l'accès au réseau Serveurs
+
+```bash
 ping 172.16.128.1
 ```
 
-Depuis R3 :
+---
+
+## Tests depuis R3
+
+### Vérification du lien vers R1
 
 ```bash
 ping 10.0.0.1
+```
+
+### Vérification de l'accès au réseau Développement
+
+```bash
 ping 172.16.127.254
 ```
 
-## Dépannage
+---
 
-### Vérifier les routes
+# Étape 6 - Validation
 
-```bash
-show ip route
-```
+Le routage est considéré comme opérationnel lorsque :
 
-### Vérifier les interfaces
+* R1 communique avec R2.
+* R1 communique avec R3.
+* R2 atteint le réseau Serveurs.
+* R3 atteint le réseau Développement.
+* Les routes statiques apparaissent dans la table de routage.
+* Les interfaces sont actives.
+
+---
+
+# Dépannage
+
+## Vérifier les interfaces
 
 ```bash
 show interfaces
 ```
 
-### Vérifier la configuration
+---
+
+## Vérifier les routes
+
+```bash
+show ip route
+```
+
+---
+
+## Vérifier la configuration complète
 
 ```bash
 show configuration commands
+```
+
+---
+
+## Vérifier la connectivité
+
+```bash
+ping <adresse_ip>
+```
+
+---
+
+## Vérifier que la configuration est sauvegardée
+
+```bash
+show configuration
+```
+
+Si la configuration disparaît après redémarrage, exécuter :
+
+```bash
+commit
+save
+```
+
+---
+
+# Conclusion
+
+L'infrastructure de routage BillU repose sur trois routeurs VyOS utilisant des routes statiques. Le routeur R1 joue le rôle de cœur de réseau et centralise les communications entre le réseau Développement et le réseau Serveurs. Cette architecture constitue la base de l'évolution future du projet avec l'intégration d'une DMZ, d'un bastion d'administration et de règles de sécurité avancées.
