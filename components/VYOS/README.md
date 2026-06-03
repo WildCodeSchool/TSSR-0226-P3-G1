@@ -45,6 +45,4 @@ Le routage est assuré à l'aide de routes statiques.
 - Bridges Linux
     
 
-## Auteur
 
-Projet réalisé dans le cadre de la formation TSSR Wild Code School.
