@@ -37,7 +37,7 @@ Le routage est assuré à l'aide de routes statiques.
 ```bash
 configure
 
-set interfaces ethernet eth0 address 10.0.2.254/24
+set interfaces ethernet eth0 address 10.0.2.2/24
 set interfaces ethernet eth1 address 10.0.1.1/30
 set interfaces ethernet eth2 address 10.0.0.1/30
 
@@ -85,8 +85,8 @@ save
 ```bash
 configure
 
-set interfaces ethernet eth0 address 10.0.0.2/30
-set interfaces ethernet eth1 address 172.16.128.1/17
+set interfaces ethernet eth3 address 172.16.128.1/17
+set interfaces ethernet eth4 address 10.0.0.2/30
 
 commit
 save
@@ -96,8 +96,8 @@ save
 
 | Interface | Réseau          |
 | --------- | --------------- |
-| eth0      | Liaison vers R1 |
-| eth1      | Réseau Serveurs |
+| eth4      | Liaison vers R1 |
+| eth3      | Réseau Serveurs |
 
 ---
 
