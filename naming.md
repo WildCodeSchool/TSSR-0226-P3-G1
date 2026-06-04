@@ -150,6 +150,39 @@ Exemple : `gaillard.remy.spe`
 | Utilisateur    | gaillard.remi     |
 | Administrateur | adm-T0-gai.rem |
 
+Nous avond donc le prefixe adm suivi du grade de l'admin eet enfin 3 premières lettres du nom et 3 premières du prenom.
+
 ## 4.2 Nom des groupes
+
+Les groupes commences tous par GRP suivi de la fonction T2 par exemple et un suffixe pour le service ou la fonction
+Ex: GRP-T2-ADMIN
+
 ## 4.3 Nom des Unités d'Organisation
+
+Les OU ont été séparées en 2 groupes pour les utilisateurs et les computers puis redivisés en plusieurs sous OU par services.
+Par exemple on trouvera:
+
+BU-Users avec comme sous OU:
+- Commercial
+- Communication
+- Comptabilité
+- Developpement
+- Direction/Qualité/Recrutement
+- DSI
+- Juridique
+
+BU-Computers avec les sous OU:
+- Poste Utilisateurs
+- Serveurs
+
 ## 4.4 Nom des GPO 
+
+Pour ce qui est des gpo nous avons choisi de commencer par differencier les gpo user, computers et celles de securités puis un nom evocateur de la fonction de la GPO
+Cela donne par exemple:
+
+- SEC-ElevationCredential
+- SEC-Firewall
+
+Ou encore :
+- User-Wallpaper
+- Computer-Chrome-Install
