@@ -161,8 +161,159 @@ save
 Le trafic destiné au réseau Développement est envoyé vers R1.
 
 ---
+# Étape 3 - Configuration du DHCP Relay
 
-# Étape 3 - Sauvegarde de la configuration
+## Objectif
+
+Le DHCP Relay permet aux postes clients situés sur un réseau différent de celui du serveur DHCP d'obtenir automatiquement une adresse IP.
+
+Le serveur DHCP utilisé dans l'infrastructure BillU possède l'adresse :
+
+```text
+172.16.130.253
+```
+
+---
+
+## Routeur R1
+
+### Configuration
+
+```bash
+configure
+
+set service dhcp-relay listen-interface eth1
+set service dhcp-relay upstream-interface eth2
+set service dhcp-relay server 172.16.130.253
+
+commit
+save
+```
+
+### Explication
+
+| Paramètre               | Description                                                   |
+| ----------------------- | ------------------------------------------------------------- |
+| listen-interface eth1   | Réception des requêtes DHCP provenant du réseau Développement |
+| upstream-interface eth2 | Envoi des requêtes vers le réseau Serveurs                    |
+| server 172.16.130.253   | Adresse du serveur DHCP                                       |
+
+---
+
+## Routeur R2
+
+### Configuration
+
+```bash
+configure
+
+set service dhcp-relay listen-interface eth1
+set service dhcp-relay upstream-interface eth0
+set service dhcp-relay server 172.16.130.253
+
+commit
+save
+```
+
+### Explication
+
+| Paramètre               | Description             |
+| ----------------------- | ----------------------- |
+| listen-interface eth1   | Réseau Développement    |
+| upstream-interface eth0 | Liaison vers R1         |
+| server 172.16.130.253   | Adresse du serveur DHCP |
+
+---
+
+## Routeur R3
+
+### Configuration
+
+```bash
+configure
+
+set service dhcp-relay listen-interface eth4
+set service dhcp-relay upstream-interface eth3
+set service dhcp-relay server 172.16.130.253
+
+commit
+save
+```
+
+### Explication
+
+| Paramètre               | Description                 |
+| ----------------------- | --------------------------- |
+| listen-interface eth4   | Réception des requêtes DHCP |
+| upstream-interface eth3 | Réseau Serveurs             |
+| server 172.16.130.253   | Adresse du serveur DHCP     |
+
+---
+
+## Vérification
+
+Afficher la configuration DHCP Relay :
+
+```bash
+show configuration commands | match dhcp-relay
+```
+
+Résultat attendu :
+
+```text
+set service dhcp-relay listen-interface ...
+set service dhcp-relay upstream-interface ...
+set service dhcp-relay server 172.16.130.253
+```
+
+---
+
+## Dépannage
+
+### Ancienne configuration détectée
+
+Si l'erreur suivante apparaît :
+
+```text
+DHCP relay interface is DEPRECATED
+```
+
+Supprimer l'ancienne configuration :
+
+```bash
+configure
+
+delete service dhcp-relay
+
+commit
+save
+```
+
+Puis recréer la configuration avec :
+
+```bash
+set service dhcp-relay listen-interface ...
+set service dhcp-relay upstream-interface ...
+set service dhcp-relay server ...
+```
+
+### Vérification du service
+
+```bash
+show service dhcp-relay
+```
+
+### Vérification de la connectivité
+
+```bash
+ping 172.16.130.253
+```
+
+Le serveur DHCP doit être joignable depuis les routeurs.
+
+
+
+# Étape 4 - Sauvegarde de la configuration
 
 Après chaque modification :
 
@@ -181,7 +332,7 @@ la configuration sera perdue après redémarrage du routeur.
 
 ---
 
-# Étape 4 - Vérification du routage
+# Étape 5 - Vérification du routage
 
 ## Vérification des interfaces
 
@@ -222,7 +373,7 @@ Résultat attendu :
 
 ---
 
-# Étape 5 - Tests de connectivité
+# Étape 6 - Tests de connectivité
 
 ## Tests depuis R2
 
@@ -256,7 +407,7 @@ ping 172.16.127.254
 
 ---
 
-# Étape 6 - Validation
+# Étape 7 - Validation
 
 Le routage est considéré comme opérationnel lorsque :
 
