@@ -45,7 +45,7 @@ Avant de commencer, les éléments suivants doivent être disponibles :
 |vmbr101|10.0.1.0/30|Liaison R1 ↔ R2|
 |vmbr102|10.0.0.0/30|Liaison R1 ↔ R3|
 |vmbr103|172.16.0.0/17|Réseau Développement|
-|vmbr104|172.16.128.0/17|Réseau Serveurs|
+|vmbr104|172.16.160.251/17|Réseau Serveurs|
 
 ---
 
