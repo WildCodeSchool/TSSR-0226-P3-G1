@@ -25,3 +25,4 @@ On va pouvoir aussi parametrer une zone reverse et des CNAME pour notre reseau (
 
 ![reverse](Ressources/dns3.png)
 
+Nous avon parametrer une declaration A pour notre site internet facade situé dans notre DMZ afin que nos utilisateurs puissent y avoir acces depuis le lan.
