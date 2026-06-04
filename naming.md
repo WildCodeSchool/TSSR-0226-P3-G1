@@ -148,7 +148,7 @@ Exemple : `gaillard.remy.spe`
 | Type           | Nom               |
 | -------------- | ----------------- |
 | Utilisateur    | gaillard.remi     |
-| Administrateur | gaillard.remi.spe |
+| Administrateur | adm-T0-gai.rem |
 
 ## 4.2 Nom des groupes
 ## 4.3 Nom des Unités d'Organisation
