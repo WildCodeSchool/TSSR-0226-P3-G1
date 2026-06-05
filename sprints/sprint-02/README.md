@@ -35,7 +35,10 @@ Tous les objectifs ont été atteints a 100% lors de ce sprint 2
 
 Lors de ce premier sprint, nous avons rencontrés quelques problèmes sur la mise en place du serveur GLPI lors de la synchronisation avec LDAP.  
 Une erreur de frappe dans la config nous a empêché de synchroniser avec LDAP, erreur corrigée.  
-Lors de la mise en place de certaines GPO , plusieurs bugs sont apparus. GPO mise à jours , plus aucun problèmes.  
+Lors de la mise en place de certaines GPO , plusieurs bugs sont apparus. GPO mise à jours , plus aucun problèmes. 
+Nous avons intégrés les routeurs après la mise en place de l'adresse IP, ce qui nous a un peu bloqué le temps de tout remettre en place.
+Un problème de template nous à fait perdre quelques heures sur la connexion en RPD, le problème a été corrigé en créant une nouvelle VM.
+
 
 # 5. Les décisions techniques
 
