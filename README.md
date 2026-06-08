@@ -56,10 +56,20 @@ C'est pour cela qu'une **refonte complète de l'infrastructure réseau** est né
 - Logiciel de gestion de parc et de ticketing (GLPI)
 - Gestion d'un firewall pfSense
 - Mise en place du réseau de l'infrastructure (Switch/Routeur)
+- Dossiers partagés
+- Stockage avancé : RAID1 sur un serveur et LVM sur un serveur
+- Supervision infrastructure réseau
+- Supervision pfSense
+- Site web externe et interne
+- Journalisation gestion des logs centralisés
+- Serveur de messagerie
+
   
 ## 3.2 Objectifs secondaires
 - Automatisation par script de l'installation du rôle AD/DS sur un serveur Windows Server Core
 - Synchronisation des objects avec l'AD sur GLPI
+- Mise en place d'une sauvegarde de données
+- Gestion des objets AD
 # 4. Vue d'ensemble des composants
 
 L'infrastructure cible reposera sur :
