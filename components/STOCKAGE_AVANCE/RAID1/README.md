@@ -2,7 +2,7 @@
 
 - [**1. Vue d'ensemble**](#1-vue-densemble)
 - [**2. Objectifs**](#2-objectifs)
-- [**3. Architecture*](#3-architecture)
+- [**3. Architecture**](#3-architecture)
   - [**3.1 Serveur Windows Server**](#31-serveur-windows-server)
   - [**3.2 Configuration RAID1**](#32-configuration-raid1)
 - [**4. Structure de la documentation**](#4-structure-de-la-documentation)
