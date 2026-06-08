@@ -1,0 +1,21 @@
+$users = Get-ADUser -Filter * -SearchBase "OU=BU_Users,DC=billu,DC=lan"
+$basePath = "\\BV-130-153.BillU.lan\Dossier_partage\Utilisateurs\"
+
+foreach ($user in $users) {
+    $folderPath = "$basePath\$($user.SamAccountName)"
+    
+    # Créer le dossier
+    New-Item -Path $folderPath -ItemType Directory -Force
+    
+    # Appliquer les permissions NTFS
+    $acl = Get-Acl $folderPath
+    $acl.SetAccessRuleProtection($true, $false) # Bloquer l'héritage
+    $rule = New-Object System.Security.AccessControl.FileSystemAccessRule(
+        $user.SamAccountName, "FullControl", "ContainerInherit,ObjectInherit", "None", "Allow"
+    )
+    $acl.SetAccessRule($rule)
+    Set-Acl $folderPath $acl
+    
+    # Lier le home folder dans AD
+    Set-ADUser $user -HomeDirectory "$folderPath" -HomeDrive "I:"
+}
