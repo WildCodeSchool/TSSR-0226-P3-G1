@@ -35,6 +35,7 @@ lsblk
 ```bash
 pvcreate /dev/sdb
 ```
+![img](Ressources/PVCREATE_LVM.png)
 
 ## 1.2 Création du Volume Group
 
@@ -44,6 +45,8 @@ pvcreate /dev/sdb
 vgcreate VG_BACKUP /dev/sdb
 ```
 
+![img](Ressources/VGCREATE_LVM.png)
+
 ## 1.3 Création du Logical Volume
 
 - Créer le Logical Volume `LV_BACKUP` en utilisant tout l'espace disponible :
@@ -51,6 +54,7 @@ vgcreate VG_BACKUP /dev/sdb
 ```bash
 lvcreate -l 100%FREE -n LV_BACKUP VG_BACKUP
 ```
+![img](Ressources/LVCREATE_LVM.png)
 
 ## 1.4 Formatage et montage
 
@@ -87,6 +91,7 @@ Filesystem                        Size  Used Avail Use% Mounted on
 ```bash
 echo '/dev/VG_BACKUP/LV_BACKUP /mnt/backup ext4 defaults 0 2' >> /etc/fstab
 ```
+![img](Ressources/MODIF_FSTAB.png)
 
 ---
 
@@ -99,6 +104,8 @@ echo '/dev/VG_BACKUP/LV_BACKUP /mnt/backup ext4 defaults 0 2' >> /etc/fstab
 ```bash
 apt install cifs-utils -y
 ```
+
+![img](Ressources/INSTALL_CIFSUTILS.png)
 
 ## 2.2 Création du point de montage
 
@@ -115,6 +122,7 @@ mkdir -p /mnt/windows
 ```bash
 mount -t cifs "//BV-130-153.BillU.lan/Dossier_partage" /mnt/windows -o username=Administrator,password='Azerty1*',uid=0,gid=0,file_mode=0777,dir_mode=0777
 ```
+![img](Ressources/MOUNT_CIFS.png)
 
 - Vérifier que les dossiers sont bien accessibles :
 
@@ -217,6 +225,7 @@ crontab -e
 ```
 0 2 * * * /usr/local/bin/backup.sh
 ```
+![img](Ressources/AUTOMATISATION_CRON.png)
 
 - Sauvegarder avec `Ctrl+X` → `Y` → `Entrée`
 
@@ -245,3 +254,5 @@ systemctl status cron
 ```bash
 grep CRON /var/log/syslog
 ```
+
+![img](Ressources/BACKUP_REUSSI_CRON.png)
