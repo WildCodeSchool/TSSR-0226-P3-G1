@@ -1,6 +1,6 @@
 ## Paramétrage de la supervision ##
 
-Afin de mieux surveiller l'activité sur notre firewall nous avons choisi de personnaliser notre Dashboad interne grâce à aux widgets déjà disponible dans l'interface de pfsense.
+Afin de mieux surveiller l'activité sur notre firewall nous avons choisi de personnaliser notre Dashboad interne grâce aux widgets déjà disponible dans l'interface de pfsense.
 
 Ajout d'un nouveau widget:
 
