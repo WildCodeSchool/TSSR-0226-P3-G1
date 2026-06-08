@@ -41,7 +41,8 @@ Le pare-feu permet d'assurer la sécurité du réseau en filtrant le trafic entr
 
 - **README.md** : Ce fichier
 - **[installation.md](installation.md)** : Fichier d'installation complète de pfSense
-- **[configuration.md](configuration.md)** : Fichier de configuration des logiciels installés 
+- **[configuration.md](configuration.md)** : Fichier de configuration des logiciels installés
+- **[supervision.md](supervision.md)** : Paramétrage de la supervision
 
 # 5. Références
 
