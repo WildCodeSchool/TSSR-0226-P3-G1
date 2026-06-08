@@ -53,7 +53,10 @@ Le serveur AD-DS va permettre la gestion de notre architecture
 
 - **README.md** : Ce fichier
 - **[installation.md](installation.md)** : Fichier d'installation des logiciels
-- **[configuration.md](configuration.md)** : Fichier de configuration des logiciels installés 
+- **[configuration.md](configuration.md)** : Fichier de configuration des logiciels installés
+- **[Dossier_partage.md](Dossier_partage.md)** : Configuration d'un dossier partagé
+
+
 
 # 5. Fonctionnalités et logiciels installés 
 
