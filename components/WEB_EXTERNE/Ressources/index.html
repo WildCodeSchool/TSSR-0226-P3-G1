@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BILLU – Éditeur de logiciels</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --black2: #111111;
+      --card: #181818;
+      --border: #2a2a2a;
+      --lime: #c6f135;
+      --lime-dim: #a8d020;
+      --white: #f5f5f5;
+      --muted: #888;
+      --font-display: 'Space Grotesk', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* NAV */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(10,10,10,0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 48px;
+      height: 64px;
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--lime); }
+    .nav-links { display: flex; gap: 32px; list-style: none; }
+    .nav-links a {
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--white); }
+    .nav-cta {
+      background: var(--lime);
+      color: var(--black);
+      padding: 8px 20px;
+      border-radius: 4px;
+      font-size: 0.875rem;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--lime-dim); }
+
+    /* HERO */
+    #accueil {
+      min-height: 100vh;
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 120px 48px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: rgba(198,241,53,0.1);
+      border: 1px solid rgba(198,241,53,0.3);
+      color: var(--lime);
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 6px 14px;
+      border-radius: 100px;
+      margin-bottom: 32px;
+      width: fit-content;
+    }
+    .hero-tag::before {
+      content: '';
+      width: 6px; height: 6px;
+      background: var(--lime);
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(3.5rem, 8vw, 7rem);
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: -0.04em;
+      max-width: 900px;
+      margin-bottom: 24px;
+    }
+    .hero-title em { font-style: normal; color: var(--lime); }
+    .hero-sub {
+      font-size: 1.125rem;
+      color: var(--muted);
+      max-width: 520px;
+      margin-bottom: 48px;
+      line-height: 1.7;
+    }
+    .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--lime);
+      color: var(--black);
+      padding: 14px 28px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.9375rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .btn-primary:hover { background: var(--lime-dim); }
+    .btn-secondary {
+      border: 1px solid var(--border);
+      color: var(--white);
+      padding: 14px 28px;
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: 0.9375rem;
+      text-decoration: none;
+      transition: border-color 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--muted); }
+    .hero-stats {
+      display: flex; gap: 48px; margin-top: 80px;
+      border-top: 1px solid var(--border);
+      padding-top: 40px;
+    }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--lime);
+      line-height: 1;
+    }
+    .stat-label { font-size: 0.8125rem; color: var(--muted); margin-top: 4px; }
+
+    /* SECTIONS */
+    section { padding: 100px 48px; }
+    .section-eyebrow {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--lime);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .section-desc { color: var(--muted); max-width: 540px; font-size: 1rem; line-height: 1.7; margin-bottom: 60px; }
+
+    /* ORGANIGRAMME */
+    #organigramme { background: var(--black2); }
+    .org-tree { display: flex; flex-direction: column; align-items: center; gap: 0; }
+    .org-level { display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; position: relative; }
+    .org-level + .org-level { margin-top: 32px; }
+    .org-connector {
+      width: 2px; height: 32px;
+      background: var(--border);
+      margin: 0 auto;
+    }
+    .org-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 20px;
+      min-width: 160px;
+      max-width: 200px;
+      text-align: center;
+      position: relative;
+    }
+    .org-card.ceo {
+      border-color: var(--lime);
+      min-width: 220px;
+    }
+    .org-card.ceo .org-name { color: var(--lime); font-size: 1.1rem; }
+    .org-name {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+    }
+    .org-role { font-size: 0.75rem; color: var(--muted); }
+    .org-dept { font-size: 0.7rem; color: var(--lime); margin-top: 4px; font-weight: 600; }
+    .org-horizontal {
+      display: flex; justify-content: center; gap: 16px; flex-wrap: wrap;
+      position: relative;
+    }
+    .org-horizontal::before {
+      content: '';
+      position: absolute;
+      top: -16px;
+      left: 50%; right: 50%;
+      height: 2px;
+      background: var(--border);
+    }
+
+    /* NEWS */
+    #news { background: var(--black); }
+    .news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+    .news-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .news-card:hover { border-color: var(--lime); transform: translateY(-4px); }
+    .news-card-img {
+      height: 180px;
+      background: var(--black2);
+      display: flex; align-items: center; justify-content: center;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+    .news-card-img svg { opacity: 0.15; }
+    .news-card-body { padding: 24px; }
+    .news-tag {
+      display: inline-block;
+      background: rgba(198,241,53,0.12);
+      color: var(--lime);
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 100px;
+      margin-bottom: 12px;
+    }
+    .news-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+    .news-excerpt { font-size: 0.875rem; color: var(--muted); line-height: 1.6; margin-bottom: 16px; }
+    .news-date { font-size: 0.75rem; color: #555; }
+
+    /* CONTACT */
+    #contact { background: var(--black2); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .contact-info { display: flex; flex-direction: column; gap: 32px; }
+    .contact-item { display: flex; gap: 16px; align-items: flex-start; }
+    .contact-icon {
+      width: 40px; height: 40px; min-width: 40px;
+      background: rgba(198,241,53,0.1);
+      border: 1px solid rgba(198,241,53,0.2);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .contact-icon svg { color: var(--lime); }
+    .contact-item-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px; }
+    .contact-item-value { font-weight: 500; }
+    .contact-form { display: flex; flex-direction: column; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 0.8125rem; color: var(--muted); font-weight: 500; }
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--white);
+      font-family: var(--font-body);
+      font-size: 0.9375rem;
+      padding: 12px 16px;
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus { border-color: var(--lime); }
+    .form-group textarea { resize: vertical; min-height: 120px; }
+    .form-group select option { background: var(--card); }
+    .btn-submit {
+      background: var(--lime);
+      color: var(--black);
+      border: none;
+      border-radius: 4px;
+      font-family: var(--font-body);
+      font-size: 0.9375rem;
+      font-weight: 700;
+      padding: 14px 28px;
+      cursor: pointer;
+      transition: background 0.2s;
+      align-self: flex-start;
+    }
+    .btn-submit:hover { background: var(--lime-dim); }
+
+    /* FOOTER */
+    footer {
+      background: var(--black);
+      border-top: 1px solid var(--border);
+      padding: 40px 48px;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 16px;
+    }
+    .footer-logo { font-family: var(--font-display); font-weight: 700; font-size: 1.25rem; }
+    .footer-logo span { color: var(--lime); }
+    .footer-copy { font-size: 0.8125rem; color: var(--muted); }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+      nav { padding: 0 24px; }
+      .nav-links { display: none; }
+      section { padding: 72px 24px; }
+      #accueil { padding: 100px 24px 60px; }
+      .hero-stats { gap: 24px; flex-wrap: wrap; }
+      .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+      .form-row { grid-template-columns: 1fr; }
+      footer { padding: 32px 24px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#accueil" class="nav-logo">BILL<span>U</span></a>
+  <ul class="nav-links">
+    <li><a href="#accueil">Accueil</a></li>
+    <li><a href="#organigramme">Équipe</a></li>
+    <li><a href="#news">Actualités</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="#contact" class="nav-cta">Nous contacter</a>
+</nav>
+
+<!-- HERO -->
+<section id="accueil">
+  <div class="hero-tag">Éditeur de logiciels · Paris</div>
+  <h1 class="hero-title">Des solutions logicielles<br>qui <em>font avancer</em><br>votre entreprise.</h1>
+  <p class="hero-sub">BillU conçoit, développe et maintient des logiciels sur mesure pour les entreprises qui veulent aller plus loin. De la conception à l'exploitation, nous sommes à vos côtés.</p>
+  <div class="hero-actions">
+    <a href="#contact" class="btn-primary">Prendre contact</a>
+    <a href="#news" class="btn-secondary">Nos actualités</a>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="stat-num">180+</div>
+      <div class="stat-label">Collaborateurs</div>
+    </div>
+    <div>
+      <div class="stat-num">8</div>
+      <div class="stat-label">Départements</div>
+    </div>
+    <div>
+      <div class="stat-num">Paris</div>
+      <div class="stat-label">Siège social</div>
+    </div>
+    <div>
+      <div class="stat-num">2026</div>
+      <div class="stat-label">Fondée en</div>
+    </div>
+  </div>
+</section>
+
+<!-- ORGANIGRAMME -->
+<section id="organigramme">
+  <div class="section-eyebrow">Notre équipe</div>
+  <h2 class="section-title">L'organigramme BillU</h2>
+  <p class="section-desc">Une organisation structurée autour de l'excellence opérationnelle et de l'innovation logicielle.</p>
+
+  <div class="org-tree">
+    <!-- CEO -->
+    <div class="org-level">
+      <div class="org-card ceo">
+        <div class="org-name">Camille Martin</div>
+        <div class="org-role">CEO – Directrice Générale</div>
+      </div>
+    </div>
+
+    <div class="org-connector"></div>
+
+    <!-- N-1 Directeurs -->
+    <div class="org-level">
+      <div class="org-card">
+        <div class="org-name">Alexis Bernard</div>
+        <div class="org-role">Directeur Adjoint</div>
+        <div class="org-dept">Direction</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Anthony Noel</div>
+        <div class="org-role">DSI</div>
+        <div class="org-dept">Systèmes d'Information</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Sofia Rossi</div>
+        <div class="org-role">Directrice Dev. Logiciel</div>
+        <div class="org-dept">Développement</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Pierre David</div>
+        <div class="org-role">Directeur Commercial</div>
+        <div class="org-dept">Service Commercial</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Noémie Leloir</div>
+        <div class="org-role">Directrice Communication</div>
+        <div class="org-dept">Communication & RP</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Yacine Hamad</div>
+        <div class="org-role">Directeur Financier</div>
+        <div class="org-dept">Finance & Comptabilité</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Fauve Hôlth</div>
+        <div class="org-role">Directrice Juridique</div>
+        <div class="org-dept">Département Juridique</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Arielle Leroy</div>
+        <div class="org-role">Responsable QHSE</div>
+        <div class="org-dept">QHSE</div>
+      </div>
+    </div>
+
+    <div class="org-connector"></div>
+
+    <!-- Responsables N-2 -->
+    <div class="org-level">
+      <div class="org-card">
+        <div class="org-name">Florian Rellay</div>
+        <div class="org-role">Resp. Développement</div>
+        <div class="org-dept">Dev. Logiciel</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Niko Gruber</div>
+        <div class="org-role">Resp. Recherche</div>
+        <div class="org-dept">Dev. Logiciel</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Elena Sánchez</div>
+        <div class="org-role">Resp. Tests & Qualité</div>
+        <div class="org-dept">Dev. Logiciel</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Bastien Lucas</div>
+        <div class="org-role">Resp. ADV</div>
+        <div class="org-dept">Commercial</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Kylian Martinez</div>
+        <div class="org-role">Resp. Achat Client</div>
+        <div class="org-dept">Commercial</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Gaelle Colin</div>
+        <div class="org-role">Resp. Communication</div>
+        <div class="org-dept">Communication</div>
+      </div>
+      <div class="org-card">
+        <div class="org-name">Christophe Leroux</div>
+        <div class="org-role">Resp. Recrutement</div>
+        <div class="org-dept">RH</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section id="news">
+  <div class="section-eyebrow">Actualités</div>
+  <h2 class="section-title">Les dernières nouvelles<br>de BillU</h2>
+  <p class="section-desc">Restez informé des évolutions de notre entreprise, de nos produits et de notre engagement.</p>
+
+  <div class="news-grid">
+    <article class="news-card">
+      <div class="news-card-img">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+          <rect x="10" y="20" width="60" height="40" rx="4" fill="#c6f135"/>
+          <rect x="20" y="30" width="40" height="4" rx="2" fill="#0a0a0a"/>
+          <rect x="20" y="40" width="30" height="4" rx="2" fill="#0a0a0a"/>
+        </svg>
+      </div>
+      <div class="news-card-body">
+        <span class="news-tag">Produit</span>
+        <h3 class="news-title">BillU v4.0 : une refonte complète de notre plateforme</h3>
+        <p class="news-excerpt">Après 18 mois de développement intensif, notre équipe est fière de dévoiler la version 4.0 de la plateforme BillU, avec une interface entièrement repensée.</p>
+        <div class="news-date">2 juin 2026</div>
+      </div>
+    </article>
+
+    <article class="news-card">
+      <div class="news-card-img">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="35" r="18" fill="#c6f135"/>
+          <rect x="20" y="58" width="40" height="6" rx="3" fill="#c6f135"/>
+        </svg>
+      </div>
+      <div class="news-card-body">
+        <span class="news-tag">Équipe</span>
+        <h3 class="news-title">BillU accueille 12 nouveaux développeurs au sein de l'équipe</h3>
+        <p class="news-excerpt">Dans le cadre de notre plan de croissance, nous avons renforcé l'équipe de développement logiciel avec 12 nouveaux talents issus de toute l'Europe.</p>
+        <div class="news-date">18 mai 2026</div>
+      </div>
+    </article>
+
+    <article class="news-card">
+      <div class="news-card-img">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+          <polygon points="40,10 65,55 15,55" fill="#c6f135"/>
+          <rect x="35" y="60" width="10" height="10" rx="2" fill="#c6f135"/>
+        </svg>
+      </div>
+      <div class="news-card-body">
+        <span class="news-tag">Certification</span>
+        <h3 class="news-title">BillU obtient la certification ISO 27001 sur la sécurité des données</h3>
+        <p class="news-excerpt">Notre département QHSE, sous la direction d'Arielle Leroy, a conduit avec succès le processus de certification ISO 27001, renforçant notre engagement sécurité.</p>
+        <div class="news-date">5 avril 2026</div>
+      </div>
+    </article>
+
+    <article class="news-card">
+      <div class="news-card-img">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+          <rect x="15" y="15" width="22" height="22" rx="4" fill="#c6f135"/>
+          <rect x="43" y="15" width="22" height="22" rx="4" fill="#c6f135" opacity="0.5"/>
+          <rect x="15" y="43" width="22" height="22" rx="4" fill="#c6f135" opacity="0.5"/>
+          <rect x="43" y="43" width="22" height="22" rx="4" fill="#c6f135"/>
+        </svg>
+      </div>
+      <div class="news-card-body">
+        <span class="news-tag">Partenariat</span>
+        <h3 class="news-title">BillU noue un partenariat stratégique avec Livingston & Associés</h3>
+        <p class="news-excerpt">Notre département juridique s'appuie désormais sur l'expertise du cabinet Livingston & Associés pour renforcer notre dispositif en droit des sociétés.</p>
+        <div class="news-date">15 mars 2026</div>
+      </div>
+    </article>
+
+    <article class="news-card">
+      <div class="news-card-img">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+          <rect x="12" y="30" width="10" height="30" rx="2" fill="#c6f135"/>
+          <rect x="28" y="20" width="10" height="40" rx="2" fill="#c6f135" opacity="0.7"/>
+          <rect x="44" y="10" width="10" height="50" rx="2" fill="#c6f135" opacity="0.5"/>
+          <rect x="60" y="25" width="10" height="35" rx="2" fill="#c6f135" opacity="0.9"/>
+        </svg>
+      </div>
+      <div class="news-card-body">
+        <span class="news-tag">Finance</span>
+        <h3 class="news-title">Résultats Q1 2026 : une croissance soutenue pour BillU</h3>
+        <p class="news-excerpt">Le premier trimestre 2026 confirme la dynamique de croissance de BillU avec des indicateurs commerciaux en hausse sur l'ensemble de nos activités.</p>
+        <div class="news-date">1 mars 2026</div>
+      </div>
+    </article>
+
+    <article class="news-card">
+      <div class="news-card-img">
+        <svg width="80" height="80" viewBox="0 0 80 80" fill="none">
+          <circle cx="40" cy="40" r="25" stroke="#c6f135" stroke-width="4" fill="none"/>
+          <path d="M30 40 L38 48 L52 32" stroke="#c6f135" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        </svg>
+      </div>
+      <div class="news-card-body">
+        <span class="news-tag">RSE</span>
+        <h3 class="news-title">BillU s'engage pour un numérique plus responsable</h3>
+        <p class="news-excerpt">Notre équipe QHSE lance un plan d'action environnemental ambitieux pour réduire l'empreinte carbone de nos infrastructures informatiques de 30% d'ici 2027.</p>
+        <div class="news-date">10 février 2026</div>
+      </div>
+    </article>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-eyebrow">Contact</div>
+  <h2 class="section-title">Parlons de votre projet</h2>
+  <p class="section-desc">Notre équipe commerciale est disponible pour répondre à toutes vos questions et vous accompagner dans vos projets.</p>
+
+  <div class="contact-grid">
+    <div class="contact-info">
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
+            <circle cx="12" cy="10" r="3"/>
+          </svg>
+        </div>
+        <div>
+          <div class="contact-item-label">Adresse</div>
+          <div class="contact-item-value">Paris, France</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+            <polyline points="22,6 12,13 2,6"/>
+          </svg>
+        </div>
+        <div>
+          <div class="contact-item-label">Email</div>
+          <div class="contact-item-value">contact@billu.fr</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.22h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 21.73 17z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="contact-item-label">Téléphone</div>
+          <div class="contact-item-value">01 60 40 93 79</div>
+        </div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <polyline points="12 6 12 12 16 14"/>
+          </svg>
+        </div>
+        <div>
+          <div class="contact-item-label">Horaires</div>
+          <div class="contact-item-value">Lun–Ven, 9h–18h</div>
+        </div>
+      </div>
+    </div>
+
+    <form class="contact-form" onsubmit="handleSubmit(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="prenom">Prénom</label>
+          <input type="text" id="prenom" placeholder="Jean" />
+        </div>
+        <div class="form-group">
+          <label for="nom">Nom</label>
+          <input type="text" id="nom" placeholder="Dupont" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">Email professionnel</label>
+        <input type="email" id="email" placeholder="jean.dupont@entreprise.fr" />
+      </div>
+      <div class="form-group">
+        <label for="sujet">Sujet</label>
+        <select id="sujet">
+          <option value="">Sélectionnez un sujet</option>
+          <option>Demande commerciale</option>
+          <option>Support technique</option>
+          <option>Partenariat</option>
+          <option>Recrutement</option>
+          <option>Autre</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="message">Message</label>
+        <textarea id="message" placeholder="Décrivez votre projet ou votre demande…"></textarea>
+      </div>
+      <button type="submit" class="btn-submit">Envoyer le message</button>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">BILL<span>U</span></div>
+  <div class="footer-copy">© 2026 BillU – Tous droits réservés</div>
+</footer>
+
+<script>
+  function handleSubmit(e) {
+    e.preventDefault();
+    const btn = e.target.querySelector('.btn-submit');
+    btn.textContent = 'Message envoyé ✓';
+    btn.style.background = '#4ade80';
+    setTimeout(() => {
+      btn.textContent = 'Envoyer le message';
+      btn.style.background = '';
+    }, 3000);
+  }
+</script>
+</body>
+</html>
