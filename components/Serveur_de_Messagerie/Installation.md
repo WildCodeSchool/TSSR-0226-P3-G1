@@ -76,11 +76,19 @@ Choix effectués :
 
 ## Vérification des services
 
-```bash
+bash
 systemctl status mariadb
+
+![https://github.com/WildCodeSchool/TSSR-0226-P3-G1/blob/main/components/Serveur_de_Messagerie/Ressources/Verif_Mariadb.png](https://github.com/WildCodeSchool/TSSR-0226-P3-G1/blob/main/components/Serveur_de_Messagerie/Ressources/Verif_Mariadb.png)
+
 systemctl status postfix
+
+![https://github.com/WildCodeSchool/TSSR-0226-P3-G1/blob/main/components/Serveur_de_Messagerie/Ressources/Verif_Postfix.png](https://github.com/WildCodeSchool/TSSR-0226-P3-G1/blob/main/components/Serveur_de_Messagerie/Ressources/Verif_Postfix.png)
+
 systemctl status dovecot
-```
+
+![https://github.com/WildCodeSchool/TSSR-0226-P3-G1/blob/main/components/Serveur_de_Messagerie/Ressources/Verif_dovecot.png](https://github.com/WildCodeSchool/TSSR-0226-P3-G1/blob/main/components/Serveur_de_Messagerie/Ressources/Verif_dovecot.png)
+
 
 ---
 
