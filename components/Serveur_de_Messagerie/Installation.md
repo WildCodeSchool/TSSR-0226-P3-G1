@@ -72,6 +72,8 @@ Choix effectués :
 * Webmail : Roundcube
 * Répertoire mail : /var/vmail
 
+![https://github.com/WildCodeSchool/TSSR-0226-P3-G1/blob/main/components/Serveur_de_Messagerie/Ressources/Confirmation_Server_mail.png](https://github.com/WildCodeSchool/TSSR-0226-P3-G1/blob/main/components/Serveur_de_Messagerie/Ressources/Confirmation_Server_mail.png)
+
 ---
 
 ## Vérification des services
