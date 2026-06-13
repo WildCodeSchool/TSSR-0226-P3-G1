@@ -11,7 +11,7 @@ DOMAIN="BILLU.LAN"           # Nom du domaine AD (MAJUSCULES)
 DOMAIN_LOWER="billu.lan"     # Nom du domaine (minuscules)
 AD_IP="172.16.130.253"                # IP du serveur AD/DNS
 AD_ADMIN="DLGUSER01"           # Compte admin AD pour joindre le domaine
-AD_GROUP="GRP_ADMIN_LINUX"          # Groupe AD autorisé à se connecter (laisser vide = tout le domaine)
+AD_GROUP="T0-admins"          # Groupe AD autorisé à se connecter (laisser vide = tout le domaine)
 HOMEDIR_BASE="/home"                # Répertoire de base pour les homes AD
 
 # ─────────────────────────────────────────────────────────────
@@ -70,6 +70,11 @@ fi
 sleep 2
 nslookup "$DOMAIN_LOWER" "$AD_IP" > /dev/null 2>&1 || warn "Résolution DNS du domaine échouée — vérifie la config DNS"
 info "Résolution DNS OK ✓"
+
+# Pré-configurer krb5-user pour éviter le prompt interactif
+echo "krb5-config krb5-config/default_realm string $DOMAIN" | debconf-set-selections
+echo "krb5-config krb5-config/kerberos_servers string $AD_IP" | debconf-set-selections
+echo "krb5-config krb5-config/add_servers boolean true" | debconf-set-selections
 
 # ─────────────────────────────────────────────────────────────
 #  3. INSTALLATION DES PAQUETS
