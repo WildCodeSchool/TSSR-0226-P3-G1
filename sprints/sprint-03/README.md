@@ -24,7 +24,7 @@
 
 # 2. La finalité de ces objectifs à la fin du sprint
 
-Tous les objectifs ont été atteints a 100% lors de ce sprint 2
+Tous les objectifs ont été atteints a 100% lors de ce sprint 3
 
 # 3. Membre du groupe et leurs rôles
 
