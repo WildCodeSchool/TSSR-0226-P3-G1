@@ -57,4 +57,4 @@ Enfin, lors de la configuration des clients de messagerie, les connexions via Th
 
 # 6. Ce qu'il reste à faire
 
-Tout a été finalisé pendant ce sprint 1 , nous sommes prêt a attaquer le sprint 2.
+Tout a été finalisé pendant ce sprint 3 , nous sommes prêt a attaquer le sprint 4.
