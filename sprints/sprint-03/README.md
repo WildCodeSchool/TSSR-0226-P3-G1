@@ -43,6 +43,10 @@ Nous avons également rencontré des difficultés lors de l'automatisation de la
 
 Enfin, lors de la configuration des clients de messagerie, les connexions via Thunderbird ont été bloquées par certaines règles du pare-feu pfSense. Après vérification des services Postfix et Dovecot ainsi que l'ouverture des ports nécessaires, les utilisateurs ont pu accéder à leurs boîtes mail et échanger des messages normalement.
 
+Problème d’installation sur zabbix 
+
+Problème de compréhension de graylog
+
 
 # 5. Les décisions techniques
 
