@@ -55,4 +55,4 @@ Un problème de template nous à fait perdre quelques heures sur la connexion en
 
 # 6. Ce qu'il reste à faire
 
-Tout a été finalisé pendant ce sprint 1 , nous sommes prêt a attaquer le sprint 2.
+Tout a été finalisé pendant ce sprint 2 , nous sommes prêt a attaquer le sprint 3.
