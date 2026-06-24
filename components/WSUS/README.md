@@ -73,8 +73,8 @@ Le comportement de mise à jour est défini par le paramètre **Configure Automa
 # 4. Structure de la documentation
 
 - **README.md** : Ce fichier
-- **[INSTALLATION.md](https://claude.ai/chat/INSTALLATION.md)** : Préparation de la VM, installation du rôle WSUS et configuration initiale (source, produits, classifications, synchronisation)
-- **[CONFIGURATION.md](https://claude.ai/chat/CONFIGURATION.md)** : Groupes WSUS, GPO de ciblage par OU, comportement différencié, approbations et vérifications
+- **[INSTALLATION.md](WSUS/installation.md)** : Préparation de la VM, installation du rôle WSUS et configuration initiale (source, produits, classifications, synchronisation)
+- **[CONFIGURATION.md](WSUS/configuration.md)** : Groupes WSUS, GPO de ciblage par OU, comportement différencié, approbations et vérifications
 
 # 5. Références
 
