@@ -60,8 +60,8 @@ La solution retenue est **WDS** (Windows Deployment Services) couplé à **MDT**
 
 ## 4. Documentation
 
-- **[installation.md](WDS/installation.md)** — Mise en place du serveur (VM, Windows Server, WDS, ADK, MDT).
-- **[configuration.md](WDS/configuration.md)** — Configuration MDT, les 3 modes, jonction au domaine, import dans WDS, réseau PXE et dépannage.
+- **[installation.md](installation.md)** — Mise en place du serveur (VM, Windows Server, WDS, ADK, MDT).
+- **[configuration.md](configuration.md)** — Configuration MDT, les 3 modes, jonction au domaine, import dans WDS, réseau PXE et dépannage.
 
 ---
 
