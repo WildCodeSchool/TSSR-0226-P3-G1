@@ -33,7 +33,7 @@ Les objectifs du sprint VoIP étaient les suivants :
 | Nom de la VM    | ServFreePBX      |
 | Nom machine     | BV-130-156       |
 | Hyperviseur     | Proxmox          |
-| Réseau          | DMZ              |
+| Réseau          | Interne              |
 | Bridge Proxmox  | vmbr105          |
 | Adresse IP      | 172.16.130.30/24 |
 | Nom DNS         | pbx.billu.lan    |
