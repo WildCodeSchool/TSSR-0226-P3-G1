@@ -15,6 +15,9 @@ Le projet est conditionné comme dans un contexte professionnel réel, avec une 
 
 ![SCHEMA_PROVISOIRE](ressources/SCHEMA_GLOBAL.png)
 
+# Schéma global à J+60
+![SCHEMA_J+60](ressources/SCHEMA_J+60.png)
+
 # 3. Liste des briques techniques
 
 # 4. Lien vers les autres fichiers HLD
