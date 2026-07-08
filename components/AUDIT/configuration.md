@@ -535,7 +535,7 @@ BV-TEST-01  CN=BV-TEST-01,OU=Serveurs,OU=BU_Computers,DC=BillU,DC=lan
 | Traçabilité | Aucune | Journal quotidien dans C:\Scripts\Logs |
 
 
-## 4. Sécurité d'accès: Restriction d'utilisation
+## 4. Sécurité d'accès Restriction d'utilisation
 
 Description de la faille
 
