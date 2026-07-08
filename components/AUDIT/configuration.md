@@ -8,7 +8,8 @@
 - [**1. Déploiement de Windows LAPS (GPO)**](#1-déploiement-de-windows-laps-gpo)
 - [**2. Sécurisation par certificat auto signé**](#2-sécurisation-par-certificat-auto-signé)
 - [**3. Déplacement automatique des ordinateurs dans les bonnes OU**](#3-déplacement-automatique-des-ordinateurs-dans-les-bonnes-ou)
-
+- [**4. Sécurité d'accès: Restriction d'utilisation**](#4-sécurité-d'accès:-restriction-d'utilisation)
+  
 ## 1. Déploiement de Windows LAPS (GPO)
 
 ### Description de la faille
@@ -526,8 +527,305 @@ BV-TEST-01  CN=BV-TEST-01,OU=Serveurs,OU=BU_Computers,DC=BillU,DC=lan
 ## Résultat
 
 | Element | Avant | Après |
+
 | --- | --- | --- |
 | Placement des ordinateurs | Manuel, machines oubliées dans CN=Computers | Automatique selon nom (`BV-`/`PC-`/`ADM-`) et attribut `description` |
 | Application des GPO machines | Impossible dans le conteneur Computers | Garantie dès le tri dans les OU |
 | Fréquence du tri | Aucune | Toutes les heures (tâche planifiée, compte SYSTEM) |
 | Traçabilité | Aucune | Journal quotidien dans C:\Scripts\Logs |
+
+
+## 4. Sécurité d'accès: Restriction d'utilisation
+
+Description de la faille
+
+Sans restriction horaire, un utilisateur standard peut se connecter au domaine à n'importe quel moment, y compris en dehors des horaires de travail.
+
+Cela représente un risque de sécurité, car un compte compromis pourrait être utilisé la nuit, le week-end ou en dehors des périodes normales d'activité sans être immédiatement détecté.
+
+L'objectif est donc de limiter les connexions des utilisateurs standards aux plages horaires autorisées, tout en conservant un accès permanent pour les administrateurs et pour certains utilisateurs d'exception.
+
+Objectif
+
+Mettre en place une restriction d'utilisation des comptes Active Directory selon les règles suivantes :
+
+Utilisateurs standards
+Lundi au vendredi : 07h00 - 20h00
+Samedi : 08h00 - 13h00
+Dimanche : connexion interdite
+Administrateurs
+Bypass total
+Groupe d'exception
+GG_SEC_Bypass_Horaires
+
+Les utilisateurs membres de ce groupe ne sont pas soumis aux restrictions horaires.
+
+Correction
+
+La correction repose sur trois éléments :
+
+création d'un groupe d'exception dans Active Directory ;
+application automatique des horaires de connexion avec un script PowerShell ;
+création d'une GPO permettant de renforcer la restriction horaire.
+
+### Étape 1 - Création du groupe d'exception
+
+Un groupe de sécurité global a été créé afin de gérer les utilisateurs autorisés à contourner la restriction horaire.
+
+Emplacement du groupe :
+
+BillU.lan
+→ BU_Groups
+
+Nom du groupe :
+
+GG_SEC_Bypass_Horaires
+
+Type du groupe :
+
+Security Group - Global
+
+Ce groupe permet de gérer les exceptions sans modifier manuellement chaque utilisateur.
+
+L'utilisateur Martinez a été ajouté dans ce groupe afin de tester le bypass.
+
+![GG_SEC_BYPASS](Ressources/GG_SEC_Bypass_Menbre.png)
+
+Étape 2 - Application automatique des horaires avec PowerShell
+
+Afin d'éviter de configurer les plages horaires utilisateur par utilisateur, un script PowerShell a été utilisé.
+
+Le script cible uniquement les utilisateurs présents dans l'OU :
+
+OU=BU_Users,DC=BillU,DC=lan
+
+Les administrateurs ne sont pas impactés, car ils sont stockés dans une autre OU :
+
+OU=BU_Admins,DC=BillU,DC=lan
+
+Le script applique les horaires suivants aux utilisateurs standards :
+
+Lundi au vendredi : 07h00 - 20h00
+Samedi : 08h00 - 13h00
+Dimanche : interdit
+
+Les utilisateurs membres du groupe GG_SEC_Bypass_Horaires sont configurés avec un accès autorisé tout le temps.
+
+Script utilisé :
+````
+Import-Module ActiveDirectory
+
+# OU contenant les utilisateurs standards
+$UsersOU = "OU=BU_Users,DC=BillU,DC=lan"
+
+# Groupe d'exception qui garde un accès complet
+$BypassGroup = "GG_SEC_Bypass_Horaires"
+
+# Récupération des membres du groupe bypass
+$BypassMembers = Get-ADGroupMember -Identity $BypassGroup -Recursive |
+    Where-Object { $_.objectClass -eq "user" } |
+    Select-Object -ExpandProperty SamAccountName
+
+# Récupération de tous les utilisateurs standards dans BU_Users et ses sous-OU
+$Users = Get-ADUser -SearchBase $UsersOU -Filter * -Properties SamAccountName
+
+foreach ($User in $Users) {
+
+    if ($BypassMembers -contains $User.SamAccountName) {
+        Write-Host "BYPASS : $($User.SamAccountName)" -ForegroundColor Green
+        net user "$($User.SamAccountName)" /domain /time:all
+    }
+    else {
+        Write-Host "RESTRICTION : $($User.SamAccountName)" -ForegroundColor Yellow
+        net user "$($User.SamAccountName)" /domain /time:"M-F,7am-8pm;Sa,8am-1pm"
+    }
+}
+````
+Commande utilisée pour exécuter le script :
+
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+.\bypass.ps1
+
+Résultat attendu :
+
+RESTRICTION : Andersson
+BYPASS : Martinez
+
+![SCRIPT_BYPASS](Ressources/Script_Bypass.png)
+
+
+Étape 3 - Vérification des horaires sur un utilisateur standard
+
+L'utilisateur Andersson a été utilisé pour tester la restriction horaire.
+
+Andersson est un utilisateur standard et ne fait pas partie du groupe GG_SEC_Bypass_Horaires.
+
+Depuis Active Directory Users and Computers :
+
+Utilisateur Andersson
+→ Properties
+→ Account
+→ Logon Hours
+
+Les horaires appliqués sont les suivants :
+
+Lundi au vendredi : 07h00 - 20h00
+Samedi : 08h00 - 13h00
+Dimanche : interdit
+
+![LOGON_HOUR](Ressources/Logon_hour.png)
+
+
+
+Étape 4 - Vérification du bypass groupe d'exception
+
+L'utilisateur Martinez a été ajouté au groupe :
+
+GG_SEC_Bypass_Horaires
+
+Après exécution du script, Martinez conserve un accès autorisé tout le temps.
+
+Depuis Active Directory Users and Computers :
+
+Utilisateur Martinez
+→ Properties
+→ Account
+→ Logon Hours
+
+Résultat attendu :
+
+Logon permitted sur toutes les plages horaires
+
+![LOGON_HOUR_BYPASS](Ressources/Logon_Hour_Bypass.png)
+
+
+Étape 5 - Création de la GPO
+
+Une GPO a été créée afin de documenter et renforcer la stratégie de restriction horaire.
+
+Nom de la GPO :
+
+GPO_SEC_Restriction_Horaires
+
+Chemin de configuration :
+
+Computer Configuration
+→ Policies
+→ Windows Settings
+→ Security Settings
+→ Local Policies
+→ Security Options
+
+Paramètre configuré :
+
+Microsoft network server: Disconnect clients when logon hours expire
+
+Valeur appliquée :
+
+Enabled
+
+![MNS_ENABLE](Ressources/MNS_Enable.png)
+
+Cette GPO permet de déconnecter les sessions réseau lorsque les horaires de connexion autorisés sont dépassés.
+
+
+
+
+Étape 6 - Application de la GPO
+
+La GPO a été appliquée sur les postes concernés avec la commande :
+
+gpupdate /force
+
+La vérification de l'application de la GPO a été réalisée avec :
+
+gpresult /r
+
+La GPO GPO_SEC_Restriction_Horaires doit apparaître dans la liste des stratégies appliquées.
+
+![GPRESULTR](Ressources/gpresultR.png)
+
+
+Étape 7 - Test de connexion hors plage horaire avec un utilisateur standard
+
+L'utilisateur Andersson a tenté de se connecter en dehors de la plage horaire autorisée.
+
+Résultat attendu :
+
+Connexion refusée
+
+Résultat obtenu :
+
+Connexion refusée avec un message indiquant une restriction horaire
+
+Le test est validé.
+
+![REFUS](Ressources/Refus.png)
+
+
+Étape 8 - Test de bypass avec un utilisateur du groupe d'exception
+
+L'utilisateur Martinez, membre du groupe GG_SEC_Bypass_Horaires, a tenté de se connecter en dehors de la plage horaire standard.
+
+Résultat attendu :
+
+Connexion autorisée
+
+Résultat obtenu :
+
+Connexion réussie
+
+Le test est validé.
+
+
+
+
+Étape 9 - Test de bypass administrateur
+
+Un compte administrateur a été testé en dehors de la plage horaire autorisée pour les utilisateurs standards.
+
+Les comptes administrateurs ne sont pas impactés par le script, car celui-ci cible uniquement l'OU :
+
+OU=BU_Users,DC=BillU,DC=lan
+
+Résultat attendu :
+
+Connexion autorisée
+
+Résultat obtenu :
+
+Connexion réussie
+
+Le test est validé.
+
+
+
+
+Résultat
+Élément	Avant correction	Après correction
+Utilisateurs standards	Connexion possible à tout moment	Connexion limitée aux horaires autorisés
+Horaires semaine	Non définis	Lundi au vendredi, 07h00 - 20h00
+Horaires samedi	Non définis	Samedi, 08h00 - 13h00
+Dimanche	Connexion possible	Connexion interdite
+Administrateurs	Connexion possible	Bypass total conservé
+Groupe d'exception	Non présent	GG_SEC_Bypass_Horaires créé et fonctionnel
+GPO	Non configurée	GPO_SEC_Restriction_Horaires configurée
+Test utilisateur standard	Non testé	Andersson bloqué hors plage horaire
+Test bypass	Non testé	Martinez autorisée grâce au groupe d'exception
+Conclusion
+
+La restriction d'utilisation est opérationnelle.
+
+Les utilisateurs standards sont désormais limités aux plages horaires autorisées :
+
+Lundi au vendredi : 07h00 - 20h00
+Samedi : 08h00 - 13h00
+Dimanche : connexion interdite
+
+L'utilisateur Andersson, qui ne fait pas partie du groupe de bypass, a bien été bloqué hors plage horaire.
+
+L'utilisateur Martinez, membre du groupe GG_SEC_Bypass_Horaires, a pu se connecter grâce au bypass.
+
+Les administrateurs disposent également d'un bypass total, car ils ne sont pas concernés par le script appliqué à l'OU BU_Users.
+
+L'objectif de sécurité d'accès est donc validé.
