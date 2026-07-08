@@ -6,7 +6,8 @@
 # Table des matières
 
 - [**1. Déploiement de Windows LAPS (GPO)**](#1-déploiement-de-windows-laps-gpo)
-- [**2. Sécurisation par certificat auto signé**](#2-sécurisation-par-certificat-auto-signé) 
+- [**2. Sécurisation par certificat auto signé**](#2-sécurisation-par-certificat-auto-signé)
+- [**3. Déplacement automatique des ordinateurs dans les bonnes OU**](#3-déplacement-automatique-des-ordinateurs-dans-les-bonnes-ou)
 
 ## 1. Déploiement de Windows LAPS (GPO)
 
@@ -384,3 +385,149 @@ Server: Microsoft-IIS/10.0
 | Distribution de la confiance | Manuelle (import poste par poste) | Automatique via GPO (Enterprise CA) |
 | Visibilité des identifiants sur le réseau | En clair (interceptable) | Chiffrés (non lisibles) |
 | Redirection HTTP → HTTPS | Absente | Active (301 Permanent) |
+
+## 3. Déplacement automatique des ordinateurs dans les bonnes OU
+
+### Description du besoin
+Lorsqu'une machine est jointe au domaine, son objet ordinateur est créé dans le conteneur par défaut `CN=Computers,DC=BillU,DC=lan`.
+Ce conteneur n'est **pas une OU** : il est impossible d'y lier des GPO. Tant que les machines y restent, elles échappent aux stratégies de groupe (LAPS, durcissement, mappages...) et l'annuaire perd sa cohérence.
+
+La solution mise en place consiste en un **script PowerShell** exécuté périodiquement par une **tâche planifiée**, qui trie automatiquement les machines vers leur OU définitive selon deux critères :
+
+- Le **préfixe du nom** de la machine (critère prioritaire)
+- La **valeur de l'attribut AD** `description` (critère de repli)
+
+**Critères de tri retenus :**
+
+| Critère | Valeur | OU de destination |
+| --- | --- | --- |
+| Nom `BV-*` | Serveur | `OU=Serveurs,OU=BU_Computers,DC=BillU,DC=lan` |
+| Nom `PC-*` | Poste utilisateur | `OU=Postes_Utilisateurs,OU=BU_Computers,DC=BillU,DC=lan` |
+| Nom `ADM-*` | Machine d'administration | `OU=Computers_Admins,OU=BU_Admins,DC=BillU,DC=lan` |
+| Attribut `description` contient `Serveur` | Serveur | `OU=Serveurs,OU=BU_Computers,DC=BillU,DC=lan` |
+| Attribut `description` contient `Poste` | Poste utilisateur | `OU=Postes_Utilisateurs,OU=BU_Computers,DC=BillU,DC=lan` |
+| Attribut `description` contient `Admin` | Machine d'administration | `OU=Computers_Admins,OU=BU_Admins,DC=BillU,DC=lan` |
+
+
+### Mise en place
+
+### Etape 1 - Dépôt des scripts
+Copier les deux scripts sur le contrôleur de domaine :
+
+```
+C:\Scripts\
+├── Move-ComputersToOU.ps1        -> script de tri (exécuté par la tâche planifiée)
+├── Setup-TaskAndRecycleBin.ps1   -> script d'installation (exécuté une seule fois)
+└── Logs\                          -> journaux (créé automatiquement)
+```
+
+Le script `Move-ComputersToOU.ps1` est documenté (bloc d'aide `.SYNOPSIS` / `.DESCRIPTION`) et paramétré en tête de fichier :
+
+```
+- $TestMode        : $true
+- $SourceOU        : CN=Computers,DC=BillU,DC=lan
+- $RulesByName     : table de correspondance préfixe -> OU cible
+- $AttributeName   : attribut AD inspecté (description)
+- $RulesByAttribute: table de correspondance valeur -> OU cible
+- $Priority        : "Name" (le nom prime sur l'attribut)
+```
+
+---
+
+### Etape 2 - Test du script en mode simulation
+Avant toute mise en production, le script est exécuté avec `$TestMode = $true` : aucun objet n'est réellement déplacé, chaque décision est tracée avec la mention `[SIMULATION]`.
+
+```
+- Créer des machines de test dans le conteneur Computers :
+  New-ADComputer -Name "PC-TEST-01" -Path "CN=Computers,DC=BillU,DC=lan"
+  New-ADComputer -Name "BV-TEST-01" -Path "CN=Computers,DC=BillU,DC=lan"
+
+- Lancer le script manuellement :
+  .\Move-ComputersToOU.ps1
+
+- Consulter le journal :
+  Get-Content C:\Scripts\Logs\MoveComputers_$(Get-Date -Format "yyyy-MM-dd").log
+```
+
+**Résultat attendu dans le log :**
+```
+2026-06-10 20:15:03 [INFO] ===== Début du traitement (TestMode = True) =====
+2026-06-10 20:15:04 [TEST] PC-TEST-01 : [SIMULATION] serait déplacé vers OU=Postes_Utilisateurs,OU=BU_Computers,DC=BillU,DC=lan
+2026-06-10 20:15:04 [TEST] BV-TEST-01 : [SIMULATION] serait déplacé vers OU=Serveurs,OU=BU_Computers,DC=BillU,DC=lan
+2026-06-10 20:15:04 [INFO] ===== Fin : 2 déplacé(s), 0 ignoré(s), 0 erreur(s) =====
+```
+
+Une fois le comportement validé, passer `$TestMode = $false` dans le script.
+
+---
+
+## Tâche planifiée d'automatisation
+
+### Description
+L'énoncé prévoit une automatisation « par tâche AT ». Grâce au **Planificateur de tâches**, utilisé ici via les cmdlets PowerShell `ScheduledTasks`. La tâche exécute le script de tri toutes les heures avec le compte `SYSTEM`.
+
+### Mise en place
+
+### Etape 1 - Création de la tâche
+La tâche est créée automatiquement par le script d'installation :
+
+```
+- Ouvrir une console PowerShell en administrateur :
+  cd C:\Scripts
+  .\Setup-TaskAndRecycleBin.ps1
+```
+
+**Caractéristiques de la tâche créée :**
+```
+Nom          : AD - Deplacement automatique des ordinateurs
+Action       : powershell.exe -NoProfile -ExecutionPolicy Bypass -File "C:\Scripts\Move-ComputersToOU.ps1"
+Déclencheur  : toutes les heures (répétition sur 10 ans)
+Compte       : SYSTEM (RunLevel Highest)
+Options      : StartWhenAvailable, limite d'exécution 30 min
+```
+---
+
+### Etape 2 - Vérification de la tâche
+
+```
+Get-ScheduledTask -TaskName "AD - Deplacement automatique des ordinateurs"
+```
+
+**Résultat attendu :**
+```
+TaskPath   TaskName                                        State
+--------   --------                                        -----
+\          AD - Deplacement automatique des ordinateurs    Ready
+```
+
+---
+
+### Etape 3 - Test fonctionnel de bout en bout
+
+```
+- Déclencher la tâche immédiatement (sans attendre l'heure suivante) :
+  Start-ScheduledTask -TaskName "AD - Deplacement automatique des ordinateurs"
+
+- Vérifier le déplacement effectif des machines de test :
+  Get-ADComputer "PC-TEST-01" | Select-Object Name, DistinguishedName
+  Get-ADComputer "BV-TEST-01" | Select-Object Name, DistinguishedName
+```
+
+**Résultat attendu :**
+```
+Name        DistinguishedName
+----        -----------------
+PC-TEST-01  CN=PC-TEST-01,OU=Postes_Utilisateurs,OU=BU_Computers,DC=BillU,DC=lan
+BV-TEST-01  CN=BV-TEST-01,OU=Serveurs,OU=BU_Computers,DC=BillU,DC=lan
+```
+---
+
+
+## Résultat
+
+| Element | Avant | Après |
+| --- | --- | --- |
+| Placement des ordinateurs | Manuel, machines oubliées dans CN=Computers | Automatique selon nom (`BV-`/`PC-`/`ADM-`) et attribut `description` |
+| Application des GPO machines | Impossible dans le conteneur Computers | Garantie dès le tri dans les OU |
+| Fréquence du tri | Aucune | Toutes les heures (tâche planifiée, compte SYSTEM) |
+| Traçabilité | Aucune | Journal quotidien dans C:\Scripts\Logs |
