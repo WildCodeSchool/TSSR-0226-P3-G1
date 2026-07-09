@@ -834,3 +834,5 @@ L'utilisateur Martinez, membre du groupe GG_SEC_Bypass_Horaires, a pu se connect
 Les administrateurs disposent également d'un bypass total, car ils ne sont pas concernés par le script appliqué à l'OU BU_Users.
 
 L'objectif de sécurité d'accès est donc validé.
+
+## Désactivation de la télémétrie
