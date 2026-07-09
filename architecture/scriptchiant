@@ -1,0 +1,40 @@
+cat > /usr/local/bin/patch_radius_authtype.sh << 'SCRIPT_END'
+#!/bin/sh
+FILE="/usr/local/etc/raddb/sites-enabled/default"
+LOG="/var/log/freeradius_patch.log"
+CHANGED=0
+
+if [ ! -f "$FILE" ]; then
+    echo "$(date): FILE NOT FOUND, skipping" >> "$LOG"
+    exit 1
+fi
+
+# 1) Insert Auth-Type patch if missing
+if ! grep -q "Auth-Type := ldap" "$FILE"; then
+    awk '
+    { print }
+    /### ldap2 disabled ###/ { flag=1 }
+    flag && /^}$/ {
+        print "    if ((ok || updated) && User-Password && !control:Auth-Type) { update control { Auth-Type := ldap } }"
+        flag=0
+    }
+    ' "$FILE" > "$FILE.tmp" && mv "$FILE.tmp" "$FILE"
+    echo "$(date): Inserted Auth-Type patch" >> "$LOG"
+    CHANGED=1
+fi
+
+# 2) Fix the notfound||noop condition if not already fixed
+if grep -q "if (notfound || noop) {" "$FILE"; then
+    sed -i '' 's/if (notfound || noop) {/if ((notfound || noop) \&\& !control:Auth-Type) {/' "$FILE"
+    echo "$(date): Fixed notfound||noop condition" >> "$LOG"
+    CHANGED=1
+fi
+
+# 3) Restart radiusd only if we actually changed something
+if [ "$CHANGED" = "1" ]; then
+    service radiusd restart
+    echo "$(date): Restarted radiusd" >> "$LOG"
+fi
+SCRIPT_END
+
+chmod +x /usr/local/bin/patch_radius_authtype.sh
