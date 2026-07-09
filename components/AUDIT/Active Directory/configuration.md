@@ -8,7 +8,7 @@ Un audit a été réalisé avec l'outil **ADcheck** afin d'identifier les vulné
 
 ### 1 Comptes utilisateurs et privilèges
 
-![adcheck](AUDIT/Ressources/adcheck5.png)
+![adcheck](Ressources/adcheck5.png)
 
 
 | Constat | Risque | Recommandation |
