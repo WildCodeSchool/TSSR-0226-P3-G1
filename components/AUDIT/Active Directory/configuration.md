@@ -26,6 +26,10 @@ Un audit a été réalisé avec l'outil **ADcheck** afin d'identifier les vulné
 
 ### 2 Durcissement système (postes / serveurs)
 
+
+![adcheck](/components/AUDIT/Ressources/adcheck4.png)
+
+
 | Constat | Risque | Recommandation |
 |---|---|---|
 | **Credential Guard** désactivé | Les secrets d'authentification (hash NTLM, tickets Kerberos) sont exposés en mémoire | Activer Credential Guard via GPO sur les postes compatibles |
