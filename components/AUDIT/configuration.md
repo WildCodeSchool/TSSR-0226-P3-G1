@@ -855,7 +855,7 @@ Mise en place d'une GPO dédiée **Computer-Telemetry-Deny**, appliquée au nive
 
 ### Étapes de configuration
 
-#### A. Désactivation de la télémétrie / diagnostic
+#### 1. Désactivation de la télémétrie / diagnostic
 
 GPO : **Computer-Telemetry-Deny**
 Chemin : `Configuration ordinateur > Modèles d'administration > Windows Components > Data Collection and Preview Builds`
@@ -872,7 +872,7 @@ Chemin : `Configuration ordinateur > Modèles d'administration > Windows Compone
 
 
 
-#### B. Désactivation de Cortana / recherche en ligne
+#### 2. Désactivation de Cortana / recherche en ligne
 
 Chemin : `Configuration ordinateur > Modèles d'administration > Windows Components > Search`
 
