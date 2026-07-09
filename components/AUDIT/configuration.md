@@ -10,6 +10,7 @@
 - [**3. Déplacement automatique des ordinateurs dans les bonnes OU**](#3-déplacement-automatique-des-ordinateurs-dans-les-bonnes-ou)
 - [**4. Sécurité d'accès Restriction d'utilisation**](#4-Sécurité-daccès-Restriction-dutilisation)
 - [**5. Désactivation de la télémétrie**](#5-désactivation-de-la-télémétrie)
+
 ## 1. Déploiement de Windows LAPS (GPO)
 
 ### Description de la faille
