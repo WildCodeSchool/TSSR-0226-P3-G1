@@ -882,6 +882,10 @@ Chemin : `Configuration ordinateur > Modèles d'administration > Windows Compone
 | Allow Cortana above lock screen | Disabled |
 | Allow Cortana Page in OOBE on an AAD account | Disabled |
 
+
+![gpo](Ressources/gpo-cortana.png)
+
+
 ### Application de la GPO
 
 1. Ouvrir **Group Policy Management**.
