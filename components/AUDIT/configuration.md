@@ -9,7 +9,7 @@
 - [**2. Sécurisation par certificat auto signé**](#2-sécurisation-par-certificat-auto-signé)
 - [**3. Déplacement automatique des ordinateurs dans les bonnes OU**](#3-déplacement-automatique-des-ordinateurs-dans-les-bonnes-ou)
 - [**4. Sécurité d'accès Restriction d'utilisation**](#4-Sécurité-daccès-Restriction-dutilisation)
-- [**5. Désactivation de la télémètrie**](#5-désactivation-de-la-télémètrie)
+- [**5. Désactivation de la télémétrie**](#5-désactivation-de-la-télémètrie)
 
 ## 1. Déploiement de Windows LAPS (GPO)
 
@@ -836,6 +836,64 @@ Les administrateurs disposent également d'un bypass total, car ils ne sont pas 
 
 L'objectif de sécurité d'accès est donc validé.
 
-## 5. Désactivation de la télémètrie
+## 5. Désactivation de la télémétrie
 
-aaaaaaaaaaaaaaaaaaaa
+Voici la documentation complète pour la section 5, basée sur tes deux captures d'écran (GPO Telemetry + Cortana). Tu peux la coller directement à la suite de ton document, dans le même style que tes autres sections :
+markdown## 5. Désactivation de la télémétrie
+
+### Description de la faille
+
+Par défaut, Windows collecte et envoie à Microsoft des données de diagnostic (télémétrie) ainsi que des données liées à Cortana et à la recherche en ligne. 
+Ces données peuvent inclure des informations sur l'utilisation du système, des données de diagnostic techniques, et potentiellement des données sensibles selon le niveau configuré.
+Dans un contexte d'entreprise, cette collecte représente un risque de fuite d'informations vers un tiers externe et n'est généralement pas souhaitable, notamment pour des raisons de conformité (RGPD) et de confidentialité.
+
+### Solution
+
+Mise en place d'une GPO dédiée **Computer-Telemetry-Deny**, appliquée au niveau des ordinateurs du domaine, désactivant :
+- La collecte de données de diagnostic
+- Les fonctionnalités liées à Cortana et à la recherche en ligne
+
+### Étapes de configuration
+
+#### A. Désactivation de la télémétrie / diagnostic
+
+GPO : **Computer-Telemetry-Deny**
+Chemin : `Configuration ordinateur > Modèles d'administration > Windows Components > Data Collection and Preview Builds`
+
+| Stratégie | Valeur |
+|---|---|
+| Allow Diagnostic Data | Enabled → **Diagnostic data off (not recommended)** |
+| Disable diagnostic data viewer | Enabled |
+| Do not show feedback notifications | Enabled |
+| Toggle user control over Insider builds | Disabled |
+
+#### B. Désactivation de Cortana / recherche en ligne
+
+Chemin : `Configuration ordinateur > Modèles d'administration > Windows Components > Search`
+
+| Stratégie | Valeur |
+|---|---|
+| Allow Cortana | Disabled |
+| Allow Cortana above lock screen | Disabled |
+| Allow Cortana Page in OOBE on an AAD account | Disabled |
+
+### Application de la GPO
+
+1. Ouvrir **Group Policy Management**.
+2. Vérifier que la GPO **Computer-Telemetry-Deny** est bien liée à l'OU contenant les ordinateurs concernés.
+3. Forcer l'application sur un poste de test via :
+gpupdate /force
+4. Vérifier l'application effective avec :
+gpresult /r
+   ou via un rapport RSOP (`rsop.msc`).
+
+### Vérification post-application
+
+- Ouvrir `Paramètres > Confidentialité > Diagnostics et commentaires` : le niveau doit apparaître au minimum ("Diagnostic data off").
+- Vérifier que Cortana n'est plus accessible depuis la barre de recherche.
+- Contrôler dans l'Observateur d'événements (`Applications and Services Logs > Microsoft > Windows > GroupPolicy`) l'absence d'erreurs d'application de GPO.
+
+### Notes
+
+- Ces réglages nécessitent au minimum Windows 10 / Windows Server 2016 pour être pleinement supportés (cf. prérequis affichés dans la GPMC pour la stratégie Cortana).
+- La désactivation totale de la télémétrie (niveau "Security", via Enterprise/Education uniquement) peut être envisagée en complément si la volumétrie de licence le permet.
