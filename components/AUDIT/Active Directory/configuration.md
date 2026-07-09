@@ -1,4 +1,4 @@
-## 6. Durcissement Active Directory (résultats ADcheck)
+## Durcissement Active Directory (résultats ADcheck)
 
 ### Description générale
 
@@ -6,7 +6,7 @@ Un audit a été réalisé avec l'outil **ADcheck** afin d'identifier les vulné
 
 ---
 
-### 6.1 Comptes utilisateurs et privilèges
+### 1 Comptes utilisateurs et privilèges
 
 | Constat | Risque | Recommandation |
 |---|---|---|
@@ -21,7 +21,7 @@ Un audit a été réalisé avec l'outil **ADcheck** afin d'identifier les vulné
 
 ---
 
-### 6.2 Durcissement système (postes / serveurs)
+### 2 Durcissement système (postes / serveurs)
 
 | Constat | Risque | Recommandation |
 |---|---|---|
@@ -47,7 +47,7 @@ Un audit a été réalisé avec l'outil **ADcheck** afin d'identifier les vulné
 
 ---
 
-### 6.3 Politique de mots de passe et Kerberos
+### 3 Politique de mots de passe et Kerberos
 
 | Constat | Risque | Recommandation |
 |---|---|---|
@@ -59,7 +59,7 @@ Un audit a été réalisé avec l'outil **ADcheck** afin d'identifier les vulné
 
 ---
 
-### 6.4 Permissions (ACL) sur l'annuaire AD
+### 4 Permissions (ACL) sur l'annuaire AD
 
 | Objet | Constat | Risque | Recommandation |
 |---|---|---|---|
@@ -69,7 +69,7 @@ Un audit a été réalisé avec l'outil **ADcheck** afin d'identifier les vulné
 
 ---
 
-### 6.5 Permissions sur les partages réseau (SYSVOL / NETLOGON / partages métier)
+### 5 Permissions sur les partages réseau (SYSVOL / NETLOGON / partages métier)
 
 | Partage | Constat | Risque | Recommandation |
 |---|---|---|---|
