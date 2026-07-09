@@ -9,7 +9,7 @@
 - [**2. Sécurisation par certificat auto signé**](#2-sécurisation-par-certificat-auto-signé)
 - [**3. Déplacement automatique des ordinateurs dans les bonnes OU**](#3-déplacement-automatique-des-ordinateurs-dans-les-bonnes-ou)
 - [**4. Sécurité d'accès Restriction d'utilisation**](#4-Sécurité-daccès-Restriction-dutilisation)
-- [**5. Désactivation de la télémétrie**](#5-désactivation-de-la-télémètrie)
+- [**5. Désactivation de la télémétrie**](#5-désactivation-de-la-télémétrie)
 
 ## 1. Déploiement de Windows LAPS (GPO)
 
