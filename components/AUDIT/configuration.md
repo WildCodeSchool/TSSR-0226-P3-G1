@@ -867,6 +867,11 @@ Chemin : `Configuration ordinateur > Modèles d'administration > Windows Compone
 | Do not show feedback notifications | Enabled |
 | Toggle user control over Insider builds | Disabled |
 
+
+![gpo](Ressources/gpo-telemetrie.png)
+
+
+
 #### B. Désactivation de Cortana / recherche en ligne
 
 Chemin : `Configuration ordinateur > Modèles d'administration > Windows Components > Search`
