@@ -836,4 +836,4 @@ Les administrateurs disposent également d'un bypass total, car ils ne sont pas 
 
 L'objectif de sécurité d'accès est donc validé.
 
-## Desactivation de la telemetrie
+## 5. Désactivation de la télémètrie
