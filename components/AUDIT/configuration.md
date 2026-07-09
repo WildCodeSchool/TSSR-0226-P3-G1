@@ -591,7 +591,7 @@ L'utilisateur Martinez a été ajouté dans ce groupe afin de tester le bypass.
 
 ![GG_SEC_BYPASS](Ressources/GG_SEC_Bypass_Menbre.png)
 
-Étape 2 - Application automatique des horaires avec PowerShell
+### Étape 2 - Application automatique des horaires avec PowerShell
 
 Afin d'éviter de configurer les plages horaires utilisateur par utilisateur, un script PowerShell a été utilisé.
 
@@ -654,7 +654,7 @@ BYPASS : Martinez
 ![SCRIPT_BYPASS](Ressources/Script_Bypass.png)
 
 
-Étape 3 - Vérification des horaires sur un utilisateur standard
+### Étape 3 - Vérification des horaires sur un utilisateur standard
 
 L'utilisateur Andersson a été utilisé pour tester la restriction horaire.
 
@@ -677,7 +677,7 @@ Dimanche : interdit
 
 
 
-Étape 4 - Vérification du bypass groupe d'exception
+### Étape 4 - Vérification du bypass groupe d'exception
 
 L'utilisateur Martinez a été ajouté au groupe :
 
@@ -699,7 +699,7 @@ Logon permitted sur toutes les plages horaires
 ![LOGON_HOUR_BYPASS](Ressources/Logon_Hour_Bypass.png)
 
 
-Étape 5 - Création de la GPO
+### Étape 5 - Création de la GPO
 
 Une GPO a été créée afin de documenter et renforcer la stratégie de restriction horaire.
 
@@ -731,7 +731,7 @@ Cette GPO permet de déconnecter les sessions réseau lorsque les horaires de co
 
 
 
-Étape 6 - Application de la GPO
+### Étape 6 - Application de la GPO
 
 La GPO a été appliquée sur les postes concernés avec la commande :
 
@@ -746,7 +746,7 @@ La GPO GPO_SEC_Restriction_Horaires doit apparaître dans la liste des stratégi
 ![GPRESULTR](Ressources/gpresultR.png)
 
 
-Étape 7 - Test de connexion hors plage horaire avec un utilisateur standard
+### Étape 7 - Test de connexion hors plage horaire avec un utilisateur standard
 
 L'utilisateur Andersson a tenté de se connecter en dehors de la plage horaire autorisée.
 
@@ -763,7 +763,7 @@ Le test est validé.
 ![REFUS](Ressources/Refus.png)
 
 
-Étape 8 - Test de bypass avec un utilisateur du groupe d'exception
+### Étape 8 - Test de bypass avec un utilisateur du groupe d'exception
 
 L'utilisateur Martinez, membre du groupe GG_SEC_Bypass_Horaires, a tenté de se connecter en dehors de la plage horaire standard.
 
@@ -780,7 +780,7 @@ Le test est validé.
 
 
 
-Étape 9 - Test de bypass administrateur
+### Étape 9 - Test de bypass administrateur
 
 Un compte administrateur a été testé en dehors de la plage horaire autorisée pour les utilisateurs standards.
 
@@ -801,26 +801,31 @@ Le test est validé.
 
 
 
-Résultat
-Élément	Avant correction	Après correction
-Utilisateurs standards	Connexion possible à tout moment	Connexion limitée aux horaires autorisés
-Horaires semaine	Non définis	Lundi au vendredi, 07h00 - 20h00
-Horaires samedi	Non définis	Samedi, 08h00 - 13h00
-Dimanche	Connexion possible	Connexion interdite
-Administrateurs	Connexion possible	Bypass total conservé
-Groupe d'exception	Non présent	GG_SEC_Bypass_Horaires créé et fonctionnel
-GPO	Non configurée	GPO_SEC_Restriction_Horaires configurée
-Test utilisateur standard	Non testé	Andersson bloqué hors plage horaire
-Test bypass	Non testé	Martinez autorisée grâce au groupe d'exception
-Conclusion
+
+
+## Résultat
+
+| Élément | Avant correction | Après correction |
+|---|---|---|
+| Utilisateurs standards | Connexion possible à tout moment | Connexion limitée aux horaires autorisés |
+| Horaires semaine | Non définis | Lundi au vendredi, 07h00 - 20h00 |
+| Horaires samedi | Non définis | Samedi, 08h00 - 13h00 |
+| Dimanche | Connexion possible | Connexion interdite |
+| Administrateurs | Connexion possible | Bypass total conservé |
+| Groupe d'exception | Non présent | GG_SEC_Bypass_Horaires créé et fonctionnel |
+| GPO | Non configurée | GPO_SEC_Restriction_Horaires configurée |
+| Test utilisateur standard | Non testé | Andersson bloqué hors plage horaire |
+| Test bypass | Non testé | Martinez autorisée grâce au groupe d'exception |
+
+## Conclusion
 
 La restriction d'utilisation est opérationnelle.
 
 Les utilisateurs standards sont désormais limités aux plages horaires autorisées :
 
-Lundi au vendredi : 07h00 - 20h00
-Samedi : 08h00 - 13h00
-Dimanche : connexion interdite
+- Lundi au vendredi : 07h00 - 20h00
+- Samedi : 08h00 - 13h00
+- Dimanche : connexion interdite
 
 L'utilisateur Andersson, qui ne fait pas partie du groupe de bypass, a bien été bloqué hors plage horaire.
 
