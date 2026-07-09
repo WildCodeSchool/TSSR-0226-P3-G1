@@ -72,6 +72,10 @@ Un audit a été réalisé avec l'outil **ADcheck** afin d'identifier les vulné
 
 ### 4 Permissions (ACL) sur l'annuaire AD
 
+
+![adcheck](/components/AUDIT/Ressources/adcheck2.png)
+
+
 | Objet | Constat | Risque | Recommandation |
 |---|---|---|---|
 | `CN=Users,DC=BillU,DC=lan` | **Authenticated Users** : lecture des propriétés et du contenu | Risque limité (lecture seule), mais expose des informations à tout utilisateur authentifié | Restreindre si le conteneur contient des comptes sensibles |
@@ -81,6 +85,10 @@ Un audit a été réalisé avec l'outil **ADcheck** afin d'identifier les vulné
 ---
 
 ### 5 Permissions sur les partages réseau (SYSVOL / NETLOGON / partages métier)
+
+
+![adcheck](/components/AUDIT/Ressources/adcheck.png)
+
 
 | Partage | Constat | Risque | Recommandation |
 |---|---|---|---|
