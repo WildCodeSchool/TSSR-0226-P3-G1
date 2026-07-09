@@ -549,14 +549,14 @@ Objectif
 
 Mettre en place une restriction d'utilisation des comptes Active Directory selon les règles suivantes :
 
-Utilisateurs standards
-Lundi au vendredi : 07h00 - 20h00
-Samedi : 08h00 - 13h00
-Dimanche : connexion interdite
-Administrateurs
-Bypass total
-Groupe d'exception
-GG_SEC_Bypass_Horaires
+Utilisateurs standards :
+- Lundi au vendredi : 07h00 - 20h00
+- Samedi : 08h00 - 13h00
+- Dimanche : connexion interdite
+- Administrateurs
+- Bypass total
+- Groupe d'exception
+- GG_SEC_Bypass_Horaires
 
 Les utilisateurs membres de ce groupe ne sont pas soumis aux restrictions horaires.
 
