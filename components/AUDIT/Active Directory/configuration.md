@@ -56,6 +56,10 @@ Un audit a été réalisé avec l'outil **ADcheck** afin d'identifier les vulné
 
 ### 3 Politique de mots de passe et Kerberos
 
+
+![adcheck](/components/AUDIT/Ressources/adcheck3.png)
+
+
 | Constat | Risque | Recommandation |
 |---|---|---|
 | Chiffrement Kerberos supporté : **RC4_HMAC_MD5** | Algorithme faible, cassable hors-ligne, permet des attaques de type Kerberoasting facilitées | Forcer AES128/AES256 uniquement (GPO "Configure encryption types allowed for Kerberos") |
