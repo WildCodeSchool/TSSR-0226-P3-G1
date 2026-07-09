@@ -8,6 +8,9 @@ Un audit a été réalisé avec l'outil **ADcheck** afin d'identifier les vulné
 
 ### 1 Comptes utilisateurs et privilèges
 
+![adcheck](components/AUDIT/Ressources/adcheck5.png)
+
+
 | Constat | Risque | Recommandation |
 |---|---|---|
 | Comptes admin : `Administrator`, `DLGUSER01`, `XC-T0`, `PCADMIN`, `SVC_WDS` | Surface d'attaque élevée si tous ces comptes ont des droits Domain Admin | Revoir le besoin réel de chaque compte, appliquer le principe du moindre privilège (tiering T0/T1/T2) |
