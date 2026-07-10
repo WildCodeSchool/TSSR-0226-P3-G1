@@ -30,6 +30,7 @@ Pour réaliser l'audit, nous allons utiliser plusieurs logiciels :
 - **AUDIT SERVEUR WEB** - Utilisation de Nikto
 - **AUDIT SERVEURS LINUX** - Utilisation de Lynis
 - **AUDIT ACTIVE DIRECTORY** - Utilisation de PingCastle, PurpleKnight et HardenSysvol
+
 | Étape | Score PingCastle |
 |-------|----------------|
 | Audit initial | 50 / 100 |
