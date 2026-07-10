@@ -902,6 +902,212 @@ gpresult /r
 - Vérifier que Cortana n'est plus accessible depuis la barre de recherche.
 - Contrôler dans l'Observateur d'événements (`Applications and Services Logs > Microsoft > Windows > GroupPolicy`) l'absence d'erreurs d'application de GPO.
 
+## 6. Mise en place d'un portail captif avec FreeRADIUS et authentification AD (pfSense)
+
+### Description du besoin
+L'objectif est de restreindre l'accès à Internet aux seuls utilisateurs authentifiés avec leurs identifiants **Active Directory**, via un portail captif hébergé sur **pfSense**.
+Sans ce dispositif, n'importe quel poste connecté au réseau utilisateurs peut accéder à Internet sans identification, ce qui empêche toute traçabilité et tout contrôle d'accès différencié selon le profil de l'utilisateur (groupe métier).
+
+**FreeRADIUS**, intégré nativement à pfSense sous forme de package, permet de faire l'intermédiaire entre le portail captif et l'annuaire AD : il reçoit la demande d'authentification du portail, interroge l'AD via LDAP, puis autorise ou refuse l'accès.
+
+### Correction
+
+---
+
+### Etape 1 - Installation du package FreeRADIUS3 sur pfSense
+
+```
+- System > Package Manager > Available Packages
+- Rechercher "freeradius3" et installer
+```
+
+Un nouveau menu **Services > FreeRADIUS** apparaît une fois l'installation terminée.
+
+---
+
+### Etape 2 - Configuration de la remontée LDAP vers l'Active Directory
+
+**Services > FreeRADIUS > LDAP**
+
+```
+Server Address     : 172.16.130.253
+Server Port        : 389
+Identity            : cn=svc-radius,OU=Compte_Services,OU=BU_Users,DC=BillU,DC=lan
+Password            : <mot de passe du compte de service>
+Base DN             : DC=BillU,DC=lan
+Filter              : (sAMAccountName=%{%{Stripped-User-Name}:-%{User-Name}})
+Active Directory Compatibility : Enable
+```
+
+```
+LDAP Authorization Support   : activé
+LDAP Authentication Support  : activé
+```
+
+![Config_LDAP](Ressources/FreeRADIUS_LDAP_config.png)
+
+**Compte de service AD utilisé :** `svc-radius`, membre du groupe technique dédié, avec un accès en lecture seule sur l'annuaire (aucun droit d'administration requis).
+
+---
+
+### Etape 3 - Déclaration de l'interface d'écoute et du client RADIUS local
+
+**Services > FreeRADIUS > Interfaces**
+
+```
+Interface IP address : 127.0.0.1
+Port                  : 1812
+Interface type        : Authentication
+```
+
+**Services > FreeRADIUS > NAS/Clients**
+
+```
+Client IP Address     : 127.0.0.1
+Client Shortname       : captive-portal
+Client Shared Secret   : <secret dédié au portail captif>
+```
+
+---
+
+### Etape 4 - Correctif Auth-Type (spécificité Active Directory)
+
+**Contexte technique :** contrairement à OpenLDAP, Active Directory ne permet jamais de lire le mot de passe (ni en clair, ni sous forme de hash) via une simple recherche LDAP. FreeRADIUS doit donc effectuer un second bind LDAP direct avec les identifiants saisis par l'utilisateur pour valider le mot de passe.
+
+Ce comportement nécessite de forcer explicitement l'attribut `Auth-Type := ldap` dans la section `authorize {}` du virtual server.
+
+### Etape 5 - Configuration du portail captif
+
+**Services > Captive Portal > portail_ad**
+
+```
+Interface                : LAN (10.0.2.1/24)
+Authentication Method     : Use an Authentication backend
+Authentication Server     : serveur radius (127.0.0.1:1812)
+RADIUS Protocol           : PAP
+```
+
+**Serveur RADIUS déclaré dans System > User Manager > Authentication Servers :**
+```
+Type              : RADIUS
+Hostname/IP       : 127.0.0.1
+Shared Secret     : <secret partagé du client captive-portal>
+Authentication port : 1812
+```
+
+**Point technique important :** le protocole RADIUS du portail doit être forcé en **PAP**. Par défaut, pfSense négocie en MS-CHAPv2, qui échoue systématiquement avec Active Directory (l'attribut `NT-Password` n'étant jamais fourni par LDAP simple bind).
+
+![Config_Portail](Ressources/CaptivePortal_config.png)
+
+---
+
+### Etape 6 - Exemptions d'authentification (Allowed IP Addresses)
+
+Certains flux doivent être autorisés même avant authentification, sous peine de bloquer la résolution DNS ou l'accès des postes d'administration :
+
+```
+172.16.130.253   - DNS BillU (both)
+172.16.130.252   - DNS BillU secondaire (both)
+172.16.16.16     - PC Admin - Bypass Portail (both)
+```
+
+**Raison :** tant qu'un client n'est pas authentifié, le portail bloque tout le trafic sortant, y compris les requêtes DNS vers les serveurs de l'AD. Sans cette exemption, la résolution DNS échoue avant même que le navigateur ne puisse envoyer une requête HTTP interceptable par le portail.
+
+---
+
+### Etape 7 - Personnalisation de la page de connexion
+
+**Services > Captive Portal > portail_ad > Captive Portal Login Page**
+
+```
+Logo Image        : captiveportal-logo-dark.png
+Background Image  : captiveportal-background.png
+Terms and Conditions : texte des conditions d'utilisation du réseau BillU
+```
+
+---
+
+### Etape 8 - Différenciation des droits par groupe AD *(en cours)*
+
+**Groupes AD créés :**
+```
+GRP_Radius_On   - accès complet   (ex: rmartinez)
+GRP_Radius_Off  - accès restreint (ex: sandersson)
+```
+
+**Configuration en cours dans Services > FreeRADIUS > LDAP > Group Membership Options :**
+```
+Enable Group Membership Options : activé
+Groupname Attribute              : cn
+Group Membership Filter          : (&(objectClass=group)(member=%{control:Ldap-UserDn}))
+```
+
+
+---
+### Etape 8 - Différenciation des droits par groupe AD
+ 
+**Groupes AD créés :**
+```
+GRP_Radius_On   - accès autorisé   (ex: rmartinez)
+GRP_Radius_Off  - accès refusé     (ex: sandersson)
+```
+ 
+**Configuration dans Services > FreeRADIUS > LDAP > Group Membership Options :**
+```
+Enable Group Membership Options : activé
+Groupname Attribute              : cn
+Group Membership Filter          : (&(objectClass=group)(member=%{control:Ldap-UserDn}))
+Compare Check Items              : Yes
+Do XLAT                          : Yes
+Access Attribute Used For Allow  : Yes
+```
+ 
+Le module `rlm_ldap` génère automatiquement, pour chaque utilisateur authentifié, un attribut virtuel `LDAP-Group` reflétant son ou ses groupes d'appartenance dans l'AD. Cet attribut est exploité dans la section `authorize {}` pour conditionner l'accès :
+ 
+```
+if (LDAP-Group == "GRP_Radius_On") {
+    update control { Auth-Type := ldap }
+}
+elsif (LDAP-Group == "GRP_Radius_Off") {
+    update control { Auth-Type := Reject }
+}
+```
+ 
+**Comportement obtenu :**
+- Un utilisateur membre de `GRP_Radius_On` (ex: `rmartinez`) est authentifié normalement via LDAP et obtient l'accès à Internet après connexion au portail.
+- Un utilisateur membre de `GRP_Radius_Off` (ex: `sandersson`) voit sa demande d'authentification rejetée par FreeRADIUS, l'accès au portail lui est refusé.
+---
+
+### Etape 9 - Tests de validation
+
+```
+Test 1 - Authentification LDAP en local (radtest) :
+  radtest rmartinez 'Azerty123!*' 127.0.0.1 0 testing123
+  → Access-Accept
+
+Test 2 - Authentification via le portail captif (navigateur) :
+  Connexion avec rmartinez / mot de passe AD
+  → Accès Internet accordé après authentification
+
+Test 3 - Résolution DNS pré-authentification :
+  Accès à un site HTTP (neverssl.com) sans authentification préalable
+  → Redirection automatique vers la page de login
+
+Test 4 - Bypass PC Admin :
+  Poste 172.16.16.16 → accès Internet direct, sans passage par le portail
+```
+
+### Résultat
+
+| Élément | Avant | Après |
+| --- | --- | --- |
+| Accès Internet | Libre, sans authentification | Conditionné à une authentification AD |
+| Source d'identité | Aucune | Compte AD nominatif (login/mot de passe) |
+| Traçabilité des connexions | Aucune | Journalisée (logs FreeRADIUS + portail captif) |
+| Différenciation des droits | Aucune | Groupes AD dédiés (`GRP_Radius_On` / `GRP_Radius_Off`), configuration en cours |
+| Postes d'administration | Soumis au portail | Exemptés (bypass IP) |
+| Persistance de la configuration RADIUS | Manuelle, perdue à chaque sauvegarde | Script d'auto-correction (`patch_radius_authtype.sh`) |
+
 ### Notes
 
 - Ces réglages nécessitent au minimum Windows 10 / Windows Server 2016 pour être pleinement supportés (cf. prérequis affichés dans la GPMC pour la stratégie Cortana).
