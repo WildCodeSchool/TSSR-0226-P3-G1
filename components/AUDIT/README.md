@@ -31,10 +31,15 @@ Pour réaliser l'audit, nous allons utiliser plusieurs logiciels :
 - **AUDIT SERVEURS LINUX** - Utilisation de Lynis
 - **AUDIT ACTIVE DIRECTORY** - Utilisation de PingCastle, PurpleKnight et HardenSysvol
 
-| Étape | Score PingCastle |
+| Étape | Score PingCastle |        
 |-------|----------------|
-| Audit initial | 50 / 100 |
-| Audit final | 20 / 100 |
+| Audit initial | 50 / 100 |        
+| Audit final | 20 / 100 | 
+
+| Étape | Score PurpleKnight |
+|-------|----------------|
+| Audit initial | 88 / 100 |
+| Audit final | 92 / 100 | 
 
 
 # 4. Tests de pénétration
