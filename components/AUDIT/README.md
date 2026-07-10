@@ -34,7 +34,7 @@ Pour réaliser l'audit, nous allons utiliser plusieurs logiciels :
 | Étape | Score PingCastle |
 |-------|----------------|
 | Audit initial | 50 / 100 |
-| Audit final | 21 / 100 |
+| Audit final | 20 / 100 |
 
 
 # 4. Tests de pénétration
