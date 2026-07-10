@@ -107,3 +107,7 @@ Un audit a été réalisé avec l'outil **ADcheck** afin d'identifier les vulné
 5. **Élevé** : désactiver LLMNR/NetBIOS/mDNS, WDigest, PowerShell v2.
 6. **Moyen** : activer Credential Guard, BitLocker, LSASS protégé, journalisation PowerShell.
 7. **Moyen** : restreindre l'accès "Everyone" sur le partage `mail`.
+
+
+## Audit PingCastle
+
