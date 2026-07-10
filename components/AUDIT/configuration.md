@@ -8,8 +8,9 @@
 - [**1. Déploiement de Windows LAPS (GPO)**](#1-déploiement-de-windows-laps-gpo)
 - [**2. Sécurisation par certificat auto signé**](#2-sécurisation-par-certificat-auto-signé)
 - [**3. Déplacement automatique des ordinateurs dans les bonnes OU**](#3-déplacement-automatique-des-ordinateurs-dans-les-bonnes-ou)
-- [**4. Sécurité d'accès Restriction d'utilisation**](#4-Sécurité-daccès-Restriction-dutilisation)
+- [**4. Sécurité d'accès Restriction d'utilisation**](#4-sécurité-daccès-restriction-dutilisation)
 - [**5. Désactivation de la télémétrie**](#5-désactivation-de-la-télémétrie)
+- [**6. Mise en place d'un portail captif avec FreeRADIUS et authentification AD**](#6-mise-en-place-dun-portail-captif-avec-freeradius-et-authentification-ad)
 
 ## 1. Déploiement de Windows LAPS (GPO)
 
@@ -902,7 +903,7 @@ gpresult /r
 - Vérifier que Cortana n'est plus accessible depuis la barre de recherche.
 - Contrôler dans l'Observateur d'événements (`Applications and Services Logs > Microsoft > Windows > GroupPolicy`) l'absence d'erreurs d'application de GPO.
 
-## 6. Mise en place d'un portail captif avec FreeRADIUS et authentification AD (pfSense)
+## 6. Mise en place d'un portail captif avec FreeRADIUS et authentification AD
 
 ### Description du besoin
 L'objectif est de restreindre l'accès à Internet aux seuls utilisateurs authentifiés avec leurs identifiants **Active Directory**, via un portail captif hébergé sur **pfSense**.
@@ -1107,8 +1108,3 @@ Test 4 - Bypass PC Admin :
 | Différenciation des droits | Aucune | Groupes AD dédiés (`GRP_Radius_On` / `GRP_Radius_Off`), configuration en cours |
 | Postes d'administration | Soumis au portail | Exemptés (bypass IP) |
 | Persistance de la configuration RADIUS | Manuelle, perdue à chaque sauvegarde | Script d'auto-correction (`patch_radius_authtype.sh`) |
-
-### Notes
-
-- Ces réglages nécessitent au minimum Windows 10 / Windows Server 2016 pour être pleinement supportés (cf. prérequis affichés dans la GPMC pour la stratégie Cortana).
-- La désactivation totale de la télémétrie (niveau "Security", via Enterprise/Education uniquement) peut être envisagée en complément si la volumétrie de licence le permet.
