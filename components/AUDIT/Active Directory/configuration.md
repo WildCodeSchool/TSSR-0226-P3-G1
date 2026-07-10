@@ -111,3 +111,90 @@ Un audit a été réalisé avec l'outil **ADcheck** afin d'identifier les vulné
 
 ## Audit PingCastle
 
+Rapport d'audit de sécurité Active Directory
+
+Domaine BillU.lan — Audit PingCastle
+Date : 10 juillet 2026
+
+
+1. Objectif du document
+
+Ce document présente les résultats d'un audit de sécurité de l'annuaire Active Directory du domaine BillU.lan, réalisé à l'aide de l'outil PingCastle. Il décrit le score de risque obtenu lors de l'audit initial, détaille les actions correctives mises en œuvre suite à ce premier constat, puis présente les résultats de l'audit final permettant de mesurer l'amélioration de la posture de sécurité du domaine.
+
+2. Audit initial
+
+Le premier scan PingCastle a permis d'établir une cartographie du niveau de risque du domaine, réparti en quatre catégories d'indicateurs : objets obsolètes (Stale Objects), comptes privilégiés (Privileged Accounts), relations d'approbation (Trusts) et anomalies de configuration (Anomalies).
+
+![avant](/components/AUDIT/Ressources/avant.png)
+
+Figure 1 — Résultat de l'audit PingCastle initial : Domain Risk Level 50/100
+
+Résultats détaillés de l'audit initial :
+
+
+Stale Objects : 11/100 (9 règles déclenchées)
+Privileged Accounts : 50/100 (4 règles déclenchées)
+Trusts : 1/100 (1 règle déclenchée)
+Anomalies : 27/100 (11 règles déclenchées)
+
+
+Le score global de risque du domaine (le plus élevé des quatre indicateurs) s'établissait à 50/100, principalement tiré vers le haut par la catégorie « Privileged Accounts », signalant des lacunes dans la protection des comptes à privilèges élevés.
+
+3. Actions correctives mises en œuvre
+
+Suite à l'analyse des résultats, les actions suivantes ont été menées afin de réduire l'exposition aux risques identifiés, en particulier sur la catégorie des comptes privilégiés.
+
+3.1 Renforcement des comptes à privilèges (groupe Protected Users)
+
+Le groupe de sécurité « T1-Admins » a été ajouté au groupe intégré « Protected Users » afin de bénéficier des protections supplémentaires qu'il offre (interdiction de l'authentification NTLM, du chiffrement Kerberos DES/RC4, de la délégation, et expiration plus stricte des tickets Kerberos).
+
+![protected](/components/AUDIT/Ressources/protected.png)
+
+Figure 2 — Ajout du groupe T1-Admins au groupe Protected Users dans Active Directory Users and Computers
+
+3.2 Protection contre la délégation des comptes administrateurs
+
+L'option « Account is sensitive and cannot be delegated » a été activée sur les comptes d'administration (ex. adm-t1-bri-hem / admin-std-), empêchant que les identifiants de ces comptes ne soient utilisés par un service tiers via la délégation Kerberos — une protection essentielle contre les scénarios d'élévation de privilèges.
+
+![secured](/components/AUDIT/Ressources/secured.png)
+
+Figure 3 — Propriétés du compte admin-std- : option « cannot be delegated » cochée
+
+3.3 Mise en place d'une sauvegarde de l'état système
+
+Une sauvegarde du System State (incluant la base Active Directory NTDS.dit, SYSVOL et le registre) a été configurée et exécutée avec succès via Windows Server Backup, garantissant une capacité de restauration de l'annuaire en cas d'incident.
+
+![backup](/components/AUDIT/Ressources/backup.png)
+
+Figure 4 — Sauvegarde System State réalisée avec succès (Windows Server Backup)
+
+4. Audit final
+
+Un second scan PingCastle a été réalisé après application des mesures correctives afin de mesurer leur impact sur le score de risque global du domaine.
+
+![apres](/components/AUDIT/Ressources/apres.png)
+
+Figure 5 — Résultat de l'audit PingCastle final : Domain Risk Level 20/100
+
+Résultats détaillés de l'audit final :
+
+
+Stale Objects : 6/100 (8 règles déclenchées)
+Privileged Accounts : 20/100 (2 règles déclenchées)
+Trusts : 1/100 (1 règle déclenchée)
+Anomalies : 2/100 (8 règles déclenchées)
+
+
+5. Synthèse comparative
+
+IndicateurScore initial /100Score final /100ÉvolutionDomain Risk Level (score global)5020-30Stale Objects116-5Privileged Accounts5020-30Trusts110Anomalies272-25
+
+L'ensemble des actions correctives menées a permis de faire chuter le score de risque global du domaine de 50/100 à 20/100, soit une réduction de 60 %. L'amélioration la plus marquée concerne la catégorie « Privileged Accounts » (protection Protected Users et anti-délégation) ainsi que la catégorie « Anomalies », passée de 27/100 à 2/100.
+
+6. Recommandations et prochaines étapes
+
+
+Poursuivre le nettoyage des objets obsolètes (Stale Objects) pour continuer à faire baisser ce score.
+Planifier des scans PingCastle réguliers (mensuels ou trimestriels) pour suivre l'évolution du score dans le temps.
+Mettre en place une sauvegarde planifiée régulière du System State (et non plus seulement ponctuelle).
+Étendre l'usage du groupe Protected Users et le principe du tiering (T0/T1/T2) à l'ensemble des comptes à privilèges du domaine.
