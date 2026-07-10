@@ -1,18 +1,25 @@
-Rapport d'audit — Serveur web Apache (www.BillU.lan)
-
+# Rapport d'audit - Serveur web Apache (www.BillU.lan)
+ 
 Outil : Nikto v2.6.0
-Cible : www.billu.lan (10.0.3.20) — Apache/2.4.67 (Debian), DMZ derrière pfSense
+Cible : www.billu.lan (10.0.3.20) - Apache/2.4.67 (Debian), DMZ derriere pfSense
 Date : 10 juillet 2026
+ 
+## Contexte
+ 
+Audit de securite du serveur web realise avec Nikto. Un premier scan a donne des resultats faussés : le trafic etait intercepte par le portail captif pfSense avant d'atteindre le serveur. Apres contournement de ce point, l'audit reel d'Apache a permis d'identifier plusieurs faiblesses de configuration, corrigees ci-dessous.
 
-Contexte
+## Failles identifiées et corrections apportées
 
-Audit de sécurité du serveur web réalisé avec Nikto. Un premier scan a donné des résultats faussés : le trafic était intercepté par le portail captif pfSense avant d'atteindre le serveur. Après contournement de ce point, l'audit réel d'Apache a permis d'identifier plusieurs faiblesses de configuration, corrigées ci-dessous.
+| Faille détectée | Correction appliquée |
+| --- | --- |
+| Fuite de l'IP interne du pare-feu (10.0.2.1) dans le header Location | UseCanonicalName On + remplacement de %{HTTP_HOST} par www.BillU.lan dans la règle de redirection HTTPS |
+| Version et OS du serveur exposés (Apache/2.4.67 Debian) | ServerTokens Prod + ServerSignature Off dans security.conf |
+| Headers de sécurité manquants (X-Content-Type-Options, Referrer-Policy, Content-Security-Policy, Permissions-Policy) | Ajout des directives Header always set correspondantes dans le vhost |
+| HSTS manquant en HTTPS | Strict-Transport-Security ajouté sur le vhost 443 uniquement |
+| Fuite d'inode via l'ETag (CVE-2003-1418) | FileETag MTime Size |
 
-Failles identifiées et corrections apportées
 
-Faille détectéeCorrection appliquéeFuite de l'IP interne du pare-feu (10.0.2.1) dans le header LocationUseCanonicalName On + remplacement de %{HTTP_HOST} par www.BillU.lan dans la règle de redirection HTTPSVersion et OS du serveur exposés (Apache/2.4.67 Debian)ServerTokens Prod + ServerSignature Off dans security.confHeaders de sécurité manquants (X-Content-Type-Options, Referrer-Policy, Content-Security-Policy, Permissions-Policy)Ajout des directives Header always set ... correspondantes dans le vhostHSTS manquant en HTTPSStrict-Transport-Security ajouté sur le vhost :443 uniquementFuite d'inode via l'ETag (CVE-2003-1418)FileETag MTime Size
-
-Résultat
+## Résultats
 
 Les captures ci-dessous montrent la configuration finale (www.conf) ainsi que les résultats des scans Nikto après correction, en HTTP et en HTTPS.
 
@@ -24,7 +31,7 @@ Les captures ci-dessous montrent la configuration finale (www.conf) ainsi que le
 
 ![conf](/components/AUDIT/Ressources/modifsite.png)
 
-Recommandations restantes
+## Recommandations restantes
 
 
 Vérifier le remplacement de X-Frame-Options (déprécié) par la directive frame-ancestors de la CSP.
