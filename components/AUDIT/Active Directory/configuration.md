@@ -204,3 +204,67 @@ Poursuivre le nettoyage des objets obsolètes (Stale Objects) pour continuer à 
 Planifier des scans PingCastle réguliers (mensuels ou trimestriels) pour suivre l'évolution du score dans le temps.
 Mettre en place une sauvegarde planifiée régulière du System State (et non plus seulement ponctuelle).
 
+# Audit Purple Knight
+
+## 1. Objectif du document
+ 
+Ce document présente les résultats d'un audit de sécurité de l'annuaire Active Directory du domaine BillU.lan, réalisé à l'aide de l'outil **Purple Knight (Community Edition)**. Il décrit le score de sécurité obtenu lors de l'audit initial, détaille les actions correctives mises en œuvre suite à ce premier constat, puis présente les résultats de l'audit final permettant de mesurer l'amélioration de la posture de sécurité du domaine.
+ 
+## 2. Audit initial
+ 
+Le premier scan Purple Knight a permis d'évaluer la sécurité de l'annuaire Active Directory à travers plusieurs catégories d'indicateurs de compromission (IOE — Indicators of Exposure) : délégation AD, sécurité des comptes, infrastructure AD, stratégies de groupe (GPO), sécurité Kerberos et environnement hybride.
+ 
+![Audit initial](Ressources/1er_audit.png)
+ 
+Le score de sécurité global du domaine s'établissait à **88 % (note C+)**, avec **11 indicateurs de compromission (IOE)** détectés. Parmi les résultats les plus significatifs relevés lors de ce premier scan figuraient notamment :
+ 
+- Des comptes utilisateurs configurés avec l'option **« Password Never Expires »** (mot de passe qui n'expire jamais), augmentant le risque en cas de compromission d'un identifiant.
+- La détection de **3 objets contrôleurs de domaine** (BV-100-101, BV-130-105, BV-130-113) dont le propriétaire (owner) n'a pas pu être lu lors du scan, une situation à vérifier en priorité car elle peut être le signe d'une compromission.
+- Un endpoint d'enrôlement web AD CS (BV-100-101.BillU.lan) **vulnérable à l'attaque ESC8**, permettant un relais d'authentification NTLM vers le service de certificats et une possible usurpation d'identité.
+
+## 3. Actions correctives mises en œuvre
+ 
+Suite à l'analyse des résultats, les actions suivantes ont été menées afin de réduire l'exposition aux risques identifiés.
+ 
+### 3.1 Rotation des mots de passe et comptes de service
+ 
+Les comptes utilisateurs identifiés avec l'option « Password Never Expires » ont été revus. Pour les comptes utilisateurs standards, l'option a été désactivée et une politique de rotation régulière des mots de passe a été appliquée. Pour les comptes assimilables à des comptes de service, une migration vers des comptes **gMSA (Group Managed Service Accounts)** a été engagée, permettant une gestion et un renouvellement automatique du mot de passe par Active Directory.
+ 
+### 3.2 Vérification et correction des propriétaires (owners) des contrôleurs de domaine
+ 
+La propriété (owner) des objets contrôleurs de domaine signalés a été vérifiée à l'aide d'un compte disposant de privilèges Domain Admin. Les droits de lecture ont été corrigés et les propriétaires réaffectés aux groupes attendus (Domain Admins / Enterprise Admins), conformément aux bonnes pratiques Microsoft sur les comptes Tier 0.
+ 
+ 
+## 4. Audit final
+ 
+Un second scan Purple Knight a été réalisé après application des mesures correctives afin de mesurer leur impact sur le score de sécurité global du domaine.
+ 
+![Audit final](Ressources/2eme_audit.png)
+ 
+ 
+Le score de sécurité global du domaine est passé à **92 % (note B-)**, avec **8 indicateurs de compromission (IOE)** restants, contre 11 lors de l'audit initial.
+ 
+![Détail par catégorie](Ressources/Audit_total.png)
+
+ 
+Le détail par catégorie de l'audit final est le suivant :
+ 
+| Indicateur | Score | Détail |
+|---|---|---|
+| AD Delegation | 93 % (B) | Délégation des droits d'administration AD |
+| Account Security | 99 % (A) | Sécurité des comptes individuels |
+| AD Infrastructure Security | 94 % (B) | Sécurité de l'infrastructure AD |
+| Group Policy Security | 100 % (A+) | Sécurité des stratégies de groupe (GPO) |
+| Kerberos Security | 100 % (A+) | Sécurité du protocole Kerberos |
+| Hybrid | N/A | Environnement hybride (non applicable) |
+ 
+## 5. Synthèse comparative
+ 
+L'ensemble des actions correctives menées a permis de faire progresser le score de sécurité global du domaine de **88 % (C+) à 92 % (B-)**, et de réduire le nombre d'indicateurs de compromission (IOE) détectés de **11 à 8**, soit 3 IOE corrigés. Les catégories « Group Policy Security » et « Kerberos Security » atteignent un score maximal (100 %, A+), tandis que les catégories « AD Delegation » et « AD Infrastructure Security » restent les axes d'amélioration prioritaires pour les prochaines itérations.
+ 
+## 6. Recommandations et prochaines étapes
+ 
+- Poursuivre la revue des IOE restants, en priorité sur les catégories « AD Delegation » (93 %) et « AD Infrastructure Security » (94 %), qui concentrent la marge de progression la plus importante.
+- Planifier des scans Purple Knight réguliers (mensuels ou trimestriels) pour suivre l'évolution du score dans le temps.
+- Documenter et auditer périodiquement les droits de délégation dans Active Directory afin d'éviter toute dérive de configuration.
+- Étendre la protection Protected Users et la politique anti-délégation à l'ensemble des comptes à privilèges, au-delà des comptes déjà couverts.
