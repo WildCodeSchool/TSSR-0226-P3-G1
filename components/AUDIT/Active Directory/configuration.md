@@ -214,7 +214,7 @@ Ce document présente les résultats d'un audit de sécurité de l'annuaire Acti
  
 Le premier scan Purple Knight a permis d'évaluer la sécurité de l'annuaire Active Directory à travers plusieurs catégories d'indicateurs de compromission (IOE — Indicators of Exposure) : délégation AD, sécurité des comptes, infrastructure AD, stratégies de groupe (GPO), sécurité Kerberos et environnement hybride.
  
-![Audit initial](Ressources/1er_audit.png)
+![Audit initial](/components/AUDIT/Ressources/1er_audit.png)
  
 Le score de sécurité global du domaine s'établissait à **88 % (note C+)**, avec **11 indicateurs de compromission (IOE)** détectés. Parmi les résultats les plus significatifs relevés lors de ce premier scan figuraient notamment :
  
@@ -239,12 +239,12 @@ La propriété (owner) des objets contrôleurs de domaine signalés a été vér
  
 Un second scan Purple Knight a été réalisé après application des mesures correctives afin de mesurer leur impact sur le score de sécurité global du domaine.
  
-![Audit final](AUDIT/Ressources/2eme_audit.png)
+![Audit final](/components/AUDIT/Ressources/2eme_audit.png)
  
  
 Le score de sécurité global du domaine est passé à **92 % (note B-)**, avec **8 indicateurs de compromission (IOE)** restants, contre 11 lors de l'audit initial.
  
-![Détail par catégorie](AUDIT/Ressources/Audit_total.png)
+![Détail par catégorie](/components/AUDIT/Ressources/Audit_total.png)
 
  
 Le détail par catégorie de l'audit final est le suivant :
