@@ -133,9 +133,13 @@ Résultats détaillés de l'audit initial :
 
 
 Stale Objects : 11/100 (9 règles déclenchées)
+
 Privileged Accounts : 50/100 (4 règles déclenchées)
+
 Trusts : 1/100 (1 règle déclenchée)
+
 Anomalies : 27/100 (11 règles déclenchées)
+
 
 
 Le score global de risque du domaine (le plus élevé des quatre indicateurs) s'établissait à 50/100, principalement tiré vers le haut par la catégorie « Privileged Accounts », signalant des lacunes dans la protection des comptes à privilèges élevés.
@@ -190,7 +194,6 @@ Anomalies : 2/100 (8 règles déclenchées)
 
 5. Synthèse comparative
 
-IndicateurScore initial /100Score final /100ÉvolutionDomain Risk Level (score global)5020-30Stale Objects116-5Privileged Accounts5020-30Trusts110Anomalies272-25
 
 L'ensemble des actions correctives menées a permis de faire chuter le score de risque global du domaine de 50/100 à 20/100, soit une réduction de 60 %. L'amélioration la plus marquée concerne la catégorie « Privileged Accounts » (protection Protected Users et anti-délégation) ainsi que la catégorie « Anomalies », passée de 27/100 à 2/100.
 
