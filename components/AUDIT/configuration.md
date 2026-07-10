@@ -945,7 +945,7 @@ LDAP Authorization Support   : activé
 LDAP Authentication Support  : activé
 ```
 
-![Config_LDAP](Ressources/FreeRADIUS_LDAP_config.png)
+![Config_LDAP](Ressources/Config_LDAP.png)
 
 **Compte de service AD utilisé :** `svc-radius`, membre du groupe technique dédié, avec un accès en lecture seule sur l'annuaire (aucun droit d'administration requis).
 
@@ -998,7 +998,7 @@ Authentication port : 1812
 
 **Point technique important :** le protocole RADIUS du portail doit être forcé en **PAP**. Par défaut, pfSense négocie en MS-CHAPv2, qui échoue systématiquement avec Active Directory (l'attribut `NT-Password` n'étant jamais fourni par LDAP simple bind).
 
-![Config_Portail](Ressources/CaptivePortal_config.png)
+![Config_Portail](Ressources/CaptivPortal_Config.png)
 
 ---
 
