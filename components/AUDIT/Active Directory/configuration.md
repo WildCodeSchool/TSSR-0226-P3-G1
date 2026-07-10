@@ -239,12 +239,12 @@ La propriété (owner) des objets contrôleurs de domaine signalés a été vér
  
 Un second scan Purple Knight a été réalisé après application des mesures correctives afin de mesurer leur impact sur le score de sécurité global du domaine.
  
-![Audit final](Ressources/2eme_audit.png)
+![Audit final](AUDIT/Ressources/2eme_audit.png)
  
  
 Le score de sécurité global du domaine est passé à **92 % (note B-)**, avec **8 indicateurs de compromission (IOE)** restants, contre 11 lors de l'audit initial.
  
-![Détail par catégorie](Ressources/Audit_total.png)
+![Détail par catégorie](AUDIT/Ressources/Audit_total.png)
 
  
 Le détail par catégorie de l'audit final est le suivant :
