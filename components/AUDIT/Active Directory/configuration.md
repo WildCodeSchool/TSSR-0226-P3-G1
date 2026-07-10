@@ -180,8 +180,11 @@ Résultats détaillés de l'audit final :
 
 
 Stale Objects : 6/100 (8 règles déclenchées)
+
 Privileged Accounts : 20/100 (2 règles déclenchées)
+
 Trusts : 1/100 (1 règle déclenchée)
+
 Anomalies : 2/100 (8 règles déclenchées)
 
 
@@ -197,4 +200,4 @@ L'ensemble des actions correctives menées a permis de faire chuter le score de 
 Poursuivre le nettoyage des objets obsolètes (Stale Objects) pour continuer à faire baisser ce score.
 Planifier des scans PingCastle réguliers (mensuels ou trimestriels) pour suivre l'évolution du score dans le temps.
 Mettre en place une sauvegarde planifiée régulière du System State (et non plus seulement ponctuelle).
-Étendre l'usage du groupe Protected Users et le principe du tiering (T0/T1/T2) à l'ensemble des comptes à privilèges du domaine.
+
