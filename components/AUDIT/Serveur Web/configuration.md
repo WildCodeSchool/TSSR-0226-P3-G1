@@ -21,7 +21,7 @@ Audit de securite du serveur web realise avec Nikto. Un premier scan a donne des
 
 ## Résultats
 
-Les captures ci-dessous montrent la configuration finale (www. conf) ainsi que les résultats des scans Nikto après correction, en HTTP et en HTTPS.
+Les captures ci-dessous montrent la configuration finale (www . conf) ainsi que les résultats des scans Nikto après correction, en HTTP et en HTTPS.
 
 ![http](/components/AUDIT/Ressources/http.png)
 
