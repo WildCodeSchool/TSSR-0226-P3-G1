@@ -1,0 +1,13 @@
+$outputDir = "$env:USERPROFILE\Documents\audits-lynis"
+Get-ChildItem "$outputDir\lynis-report-*.dat" | ForEach-Object {
+    $name = $_.Name -replace "lynis-report-|\.dat", ""
+    $hardening = (Select-String -Path $_.FullName -Pattern "hardening_index=").Line -replace "hardening_index=", ""
+    $warnings = (Select-String -Path $_.FullName -Pattern "warning\[\]").Count
+    $suggestions = (Select-String -Path $_.FullName -Pattern "suggestion\[\]").Count
+    [PSCustomObject]@{
+        Serveur        = $name
+        HardeningIndex = $hardening
+        Warnings       = $warnings
+        Suggestions    = $suggestions
+    }
+} | Format-Table -AutoSize
