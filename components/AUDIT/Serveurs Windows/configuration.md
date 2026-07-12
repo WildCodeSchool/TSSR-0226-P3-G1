@@ -1,6 +1,7 @@
 - [**1. Audit des permissions NTFS avec AccessEnum**](#1-audit-des-permissions-ntfs-avec-accessEnum)
 - [**2. Audit des permissions avec AccessChk**](#2-audit-des-permissions-avec-accessChk)
-- [**3. 3. Test de ShareEnum**](#3-test-de-shareEnum)
+- [**3. Test de ShareEnum**](#3-test-de-shareEnum)
+- [**4. Audit SMB natif avec PowerShell**](#4-audit-smb-natif-avec-powerShell)
 
 
 
@@ -529,3 +530,272 @@ L'audit SMB a donc été poursuivi avec :
 - PowerHuntShares pour l'audit complémentaire des partages SMB.
 
 Cette approche permet de conserver une démarche d'audit complète malgré l'impossibilité d'exploiter ShareEnum.
+
+
+## 4. Audit SMB natif avec PowerShell
+
+### Contexte
+
+L'outil `PowerHuntShares` devait initialement être utilisé afin de réaliser un audit des partages SMB du domaine.
+
+Cependant, lors de son import dans PowerShell, Microsoft Defender a bloqué le module en le détectant comme un contenu potentiellement malveillant.
+
+Message rencontré :
+
+```text
+Ce script dont le contenu est malveillant a été bloqué par votre logiciel antivirus.
+```
+
+Malgré la restauration du fichier et la création d'exclusions dans Microsoft Defender, le module a continué à être bloqué au moment de son import.
+
+Par mesure de sécurité, la protection antivirus n'a pas été désactivée.  
+Il a donc été décidé de réaliser un audit équivalent avec les commandes PowerShell natives de Windows.
+
+---
+
+### Objectif de l'audit
+
+L'objectif de cet audit est d'inventorier les partages SMB du serveur de stockage et de vérifier les permissions appliquées sur ces partages.
+
+L'audit permet de contrôler :
+
+- la liste des partages SMB présents sur le serveur ;
+- les chemins locaux associés aux partages ;
+- les groupes autorisés ;
+- les droits appliqués ;
+- la présence éventuelle de permissions trop larges ;
+- les droits accordés à des groupes sensibles comme `Everyone`, `Domain Users` ou `Authenticated Users`.
+
+---
+
+### Machine utilisée
+
+L'audit a été lancé depuis le PC Admin à l'aide d'une session CIM vers le serveur de stockage.
+
+| Élément | Valeur |
+|---|---|
+| Machine d'administration | `PC Admin` |
+| Serveur audité | `BV-130-153` |
+| Méthode utilisée | PowerShell natif |
+| Type d'audit | Audit des partages SMB |
+| Outil initialement prévu | `PowerHuntShares` |
+| Solution de secours | Commandes SMB natives PowerShell |
+
+---
+
+### Création de la session CIM
+
+Une session CIM a été créée afin d'interroger à distance le serveur de stockage.
+
+```powershell
+$Server = "BV-130-153"
+$Session = New-CimSession -ComputerName $Server
+```
+
+Cette session permet d'exécuter les commandes SMB sur le serveur cible depuis le PC Admin.
+
+---
+
+### Liste des partages SMB
+
+La commande suivante a été utilisée pour lister les partages SMB du serveur de stockage :
+
+```powershell
+Get-SmbShare -CimSession $Session
+```
+
+Résultat obtenu :
+
+```text
+Name              Path                          Description
+----              ----                          -----------
+ADMIN$            C:\Windows                    Remote Admin
+Backup            K:\Backup
+C$                C:\                           Default share
+Dossier_partage   K:\Shares\Dossier_partage
+IPC$                                            Remote IPC
+K$                K:\                           Default share
+```
+
+Les partages administratifs comme `ADMIN$`, `C$`, `IPC$` et `K$` sont des partages système standards de Windows.
+
+Les partages métiers identifiés sont :
+
+| Partage | Chemin local | Rôle |
+|---|---|---|
+| `Backup` | `K:\Backup` | Dossier de sauvegarde |
+| `Dossier_partage` | `K:\Shares\Dossier_partage` | Partage principal des utilisateurs et services |
+
+---
+
+### Vérification des permissions du partage principal
+
+La commande suivante a été utilisée pour vérifier les permissions du partage `Dossier_partage` :
+
+```powershell
+Get-SmbShareAccess -CimSession $Session -Name "Dossier_partage"
+```
+
+Résultat obtenu :
+
+```text
+Name              AccountName              AccessControlType   AccessRight
+----              -----------              -----------------   -----------
+Dossier_partage   BILLU\GRP-T2-ADMIN        Allow               Full
+Dossier_partage   BILLU\Domain Users        Allow               Change
+```
+
+Analyse :
+
+| Groupe | Droit SMB | Analyse |
+|---|---|---|
+| `BILLU\GRP-T2-ADMIN` | `Full` | Groupe d'administration autorisé à gérer le partage |
+| `BILLU\Domain Users` | `Change` | Accès réseau au partage pour les utilisateurs du domaine |
+
+Le groupe `Everyone` n'est pas présent sur le partage `Dossier_partage`.
+
+Cette configuration est cohérente, car les utilisateurs peuvent atteindre le partage réseau, mais les accès précis sont ensuite limités par les permissions NTFS appliquées aux sous-dossiers.
+
+---
+
+### Recherche des permissions sensibles
+
+Une recherche a été effectuée afin d'identifier les groupes larges ou sensibles présents dans les permissions SMB.
+
+Commande utilisée :
+
+```powershell
+$Audit | Where-Object {
+    $_.AccountName -match "Everyone|Tout le monde|Authenticated Users|Utilisateurs authentifiés|Domain Users"
+} | Format-Table -AutoSize
+```
+
+Résultat obtenu :
+
+```text
+ShareName         Path                          AccountName          AccessControlType AccessRight
+---------         ----                          -----------          ----------------- -----------
+Backup            K:\Backup                     Everyone             Allow             Full
+Dossier_partage   K:\Shares\Dossier_partage     BILLU\Domain Users   Allow             Change
+```
+
+---
+
+### Analyse des résultats
+
+L'audit a permis d'identifier deux éléments importants.
+
+#### Partage `Dossier_partage`
+
+Le partage principal est configuré de manière cohérente :
+
+| Groupe | Droit | État |
+|---|---|---|
+| `BILLU\GRP-T2-ADMIN` | Full | Conforme |
+| `BILLU\Domain Users` | Change | Conforme avec contrôle NTFS |
+| `Everyone` | Aucun droit | Conforme |
+
+Le droit `Change` accordé à `Domain Users` permet l'accès réseau au partage.  
+Les permissions NTFS contrôlent ensuite précisément les accès aux sous-dossiers.
+
+#### Partage `Backup`
+
+Le partage `Backup` présente une permission trop large :
+
+| Groupe | Droit | État |
+|---|---|---|
+| `Everyone` | Full | Non conforme |
+
+Le groupe `Everyone` avec le droit `Full` représente un risque, car il peut permettre à un trop grand nombre d'utilisateurs d'accéder ou de modifier des données de sauvegarde.
+
+---
+
+### Risque identifié
+
+Le droit `Everyone : Full` sur le partage `Backup` présente plusieurs risques :
+
+- accès trop large aux données de sauvegarde ;
+- modification ou suppression possible de fichiers de sauvegarde ;
+- non-respect du principe du moindre privilège ;
+- risque d'impact en cas de compte compromis ;
+- exposition inutile d'un dossier sensible.
+
+---
+
+### Recommandation de correction
+
+La configuration recommandée pour le partage `Backup` est la suivante :
+
+| Groupe / Compte | Droit recommandé |
+|---|---|
+| `BILLU\GRP-T2-ADMIN` | Full |
+| Compte de service de sauvegarde | Change ou Full selon le besoin |
+| `Everyone` | Supprimé |
+
+Le partage `Backup` ne doit pas être accessible en contrôle total à tous les utilisateurs.
+
+---
+
+### Export des résultats
+
+Les résultats de l'audit ont été exportés au format CSV dans le dossier suivant :
+
+```text
+C:\Users\PCADMIN\Desktop\Audit_Windows\Exports\Audit_SMB_Natif
+```
+
+Fichiers générés :
+
+```text
+01_liste_partages_smb.csv
+02_permissions_partages_smb.csv
+```
+
+Ces exports permettent de conserver une trace des partages SMB et des permissions observées pendant l'audit.
+
+---
+
+### Cohérence avec les audits précédents
+
+Les résultats de l'audit PowerShell natif complètent les audits réalisés précédemment :
+
+| Audit | Résultat |
+|---|---|
+| AccessEnum | Vérification des permissions NTFS |
+| AccessChk | Vérification ciblée des droits d'écriture |
+| ShareEnum | Testé mais non exploitable dans l'environnement |
+| PowerHuntShares | Bloqué par Microsoft Defender |
+| PowerShell natif SMB | Audit SMB réalisé avec succès |
+
+---
+
+### Conclusion
+
+PowerHuntShares n'a pas pu être utilisé dans l'environnement, car Microsoft Defender a bloqué le module malgré la restauration du fichier et la création d'exclusions.
+
+Afin de conserver une démarche d'audit propre et de ne pas désactiver l'antivirus, un audit équivalent a été réalisé avec les commandes PowerShell natives de Windows.
+
+Cet audit a permis de :
+
+- lister les partages SMB du serveur de stockage ;
+- identifier les partages métiers ;
+- vérifier les permissions du partage `Dossier_partage` ;
+- confirmer l'absence du groupe `Everyone` sur le partage principal ;
+- détecter une anomalie sur le partage `Backup`.
+
+Le partage `Dossier_partage` est conforme à la configuration attendue.  
+Le partage `Backup` nécessite une correction, car le groupe `Everyone` dispose actuellement du droit `Full`.
+
+---
+
+### Captures d'écran
+
+![PowerHuntShares bloqué par Microsoft Defender](./screenshots/10_powerhuntshares_blocage_defender.png)
+
+![Exclusion créée dans Microsoft Defender](./screenshots/11_powerhuntshares_exclusion_defender.png)
+
+![Liste des partages SMB avec PowerShell](./screenshots/12_powershell_liste_partages_smb.png)
+
+![Permissions SMB du partage Dossier_partage](./screenshots/13_powershell_permissions_dossier_partage.png)
+
+![Recherche des permissions sensibles SMB](./screenshots/14_powershell_recherche_permissions_sensibles.png)
