@@ -1,5 +1,6 @@
 - [**1. Audit des permissions NTFS avec AccessEnum**](#1-audit-des-permissions-ntfs-avec-accessEnum)
 - [**2. Audit des permissions avec AccessChk**](#2-audit-des-permissions-avec-accessChk)
+- [**3. 3. Test de ShareEnum**](#3-test-de-shareEnum)
 
 
 
@@ -408,3 +409,125 @@ Cette phase complète l'audit réalisé avec AccessEnum.
 ![AccessChk - Administrators avec droits RW](Ressources/ADMIN.png)
 
 ![AccessChk - GRP-T2-ADMIN avec droits RW](Ressources/GRP-T2.png)
+
+
+## 3. Test de ShareEnum
+
+### Objectif initial
+
+L'objectif initial était d'utiliser l'outil `ShareEnum` afin d'inventorier les partages SMB présents sur le domaine BillU.
+
+ShareEnum devait permettre d'identifier :
+
+- les partages réseau accessibles ;
+- les chemins locaux associés aux partages ;
+- les permissions appliquées sur les partages ;
+- les éventuels droits trop permissifs ;
+- la présence de groupes larges comme `Everyone`, `Domain Users` ou `Authenticated Users`.
+
+---
+
+### Machine utilisée
+
+L'outil a été testé depuis plusieurs machines du domaine afin de vérifier son fonctionnement.
+
+| Machine | Résultat |
+|---|---|
+| PC Admin | Échec de détection du domaine |
+| Contrôleur de domaine / AD | Échec de détection du domaine |
+
+L'outil a été lancé en tant qu'administrateur depuis le dossier contenant les outils d'audit.
+
+---
+
+### Problème rencontré
+
+Lors du lancement de ShareEnum, l'outil n'a pas réussi à détecter le domaine ou les groupes de travail disponibles sur le réseau.
+
+Message obtenu :
+
+```text
+No domains or workgroups were found on your network
+```
+
+Ce message est apparu malgré les tests effectués depuis le PC Admin et depuis le contrôleur de domaine.
+
+Capture associée :
+
+```text
+09_shareenum_erreur_detection_domaine.png
+```
+
+---
+
+### Analyse du problème
+
+ShareEnum repose sur des mécanismes de découverte réseau Windows plus anciens, notamment l'énumération des domaines, des groupes de travail et des partages SMB visibles sur le réseau.
+
+Dans notre environnement de lab, cette découverte automatique n'a pas fonctionné.
+
+Plusieurs causes peuvent expliquer ce comportement :
+
+- découverte réseau Windows désactivée ou limitée ;
+- filtrage réseau entre les différentes zones ;
+- environnement segmenté avec plusieurs sous-réseaux ;
+- fonctionnement limité de NetBIOS / SMB pour l'énumération réseau ;
+- outil ancien et moins adapté aux environnements Active Directory modernes ou segmentés.
+
+L'échec de ShareEnum ne signifie donc pas que le domaine ou les partages SMB sont mal configurés. Cela indique simplement que l'outil n'a pas réussi à énumérer automatiquement les ressources réseau dans cet environnement.
+
+---
+
+### Décision prise
+
+Comme ShareEnum n'a pas permis d'obtenir un résultat exploitable, l'audit des partages SMB a été poursuivi avec d'autres méthodes.
+
+Méthodes utilisées à la place :
+
+| Méthode | Rôle |
+|---|---|
+| Vérification manuelle des permissions SMB | Contrôle des droits de partage depuis l'interface graphique Windows |
+| AccessEnum | Audit des permissions NTFS sur l'arborescence du dossier partagé |
+| AccessChk | Vérification ciblée des droits d'écriture par groupe |
+| PowerHuntShares | Audit complémentaire des partages SMB du domaine |
+
+---
+
+### Résultat de remplacement
+
+Même si ShareEnum n'a pas pu être exploité, les permissions du partage principal ont été vérifiées manuellement.
+
+Partage concerné :
+
+```text
+K:\Shares\Dossier_partage
+```
+
+La configuration finale du partage SMB est la suivante :
+
+| Groupe | Full Control | Change | Read | Rôle |
+|---|---:|---:|---:|---|
+| `GRP-T2-ADMIN` | Oui | Oui | Oui | Administration complète du partage |
+| `Domain Users` | Non | Oui | Oui | Accès réseau au partage |
+| `Everyone` | Non | Non | Non | Groupe supprimé du partage |
+
+Cette vérification a permis de confirmer que le groupe `Everyone` n'est plus utilisé sur le partage et que les accès sont limités à des groupes identifiés.
+
+---
+
+### Conclusion
+
+ShareEnum a bien été testé dans le cadre de l'audit des serveurs Windows, mais l'outil n'a pas permis d'obtenir de résultats exploitables dans l'environnement BillU.
+
+L'erreur rencontrée indique que ShareEnum n'a pas réussi à détecter les domaines ou groupes de travail disponibles sur le réseau.
+
+L'outil étant ancien et dépendant de mécanismes de découverte réseau parfois désactivés ou limités, il a été écarté au profit d'autres méthodes plus adaptées.
+
+L'audit SMB a donc été poursuivi avec :
+
+- une vérification manuelle des permissions de partage ;
+- AccessEnum pour les permissions NTFS ;
+- AccessChk pour les contrôles ciblés ;
+- PowerHuntShares pour l'audit complémentaire des partages SMB.
+
+Cette approche permet de conserver une démarche d'audit complète malgré l'impossibilité d'exploiter ShareEnum.
