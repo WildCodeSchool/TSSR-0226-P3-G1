@@ -545,8 +545,11 @@ Message rencontré :
 ```text
 Ce script dont le contenu est malveillant a été bloqué par votre logiciel antivirus.
 ```
+![message-erreur](Ressources/Defender_bloque.png)
 
 Malgré la restauration du fichier et la création d'exclusions dans Microsoft Defender, le module a continué à être bloqué au moment de son import.
+
+![exclusion](ressources/Exclusion.png)
 
 Par mesure de sécurité, la protection antivirus n'a pas été désactivée.  
 Il a donc été décidé de réaliser un audit équivalent avec les commandes PowerShell natives de Windows.
@@ -644,6 +647,7 @@ Name              AccountName              AccessControlType   AccessRight
 Dossier_partage   BILLU\GRP-T2-ADMIN        Allow               Full
 Dossier_partage   BILLU\Domain Users        Allow               Change
 ```
+![SMB](Ressources/Dossier_partage_SMB.png)
 
 Analyse :
 
@@ -678,6 +682,7 @@ ShareName         Path                          AccountName          AccessContr
 Backup            K:\Backup                     Everyone             Allow             Full
 Dossier_partage   K:\Shares\Dossier_partage     BILLU\Domain Users   Allow             Change
 ```
+![Permission_SMB](Ressources/Permission_SMB.png)
 
 ---
 
@@ -707,6 +712,8 @@ Le partage `Backup` présente une permission trop large :
 | `Everyone` | Full | Non conforme |
 
 Le groupe `Everyone` avec le droit `Full` représente un risque, car il peut permettre à un trop grand nombre d'utilisateurs d'accéder ou de modifier des données de sauvegarde.
+
+![rech_perm_smb.png](Ressources/rech_perm_smb.png)
 
 ---
 
@@ -788,14 +795,4 @@ Le partage `Backup` nécessite une correction, car le groupe `Everyone` dispose 
 
 ---
 
-### Captures d'écran
 
-![PowerHuntShares bloqué par Microsoft Defender](./screenshots/10_powerhuntshares_blocage_defender.png)
-
-![Exclusion créée dans Microsoft Defender](./screenshots/11_powerhuntshares_exclusion_defender.png)
-
-![Liste des partages SMB avec PowerShell](./screenshots/12_powershell_liste_partages_smb.png)
-
-![Permissions SMB du partage Dossier_partage](./screenshots/13_powershell_permissions_dossier_partage.png)
-
-![Recherche des permissions sensibles SMB](./screenshots/14_powershell_recherche_permissions_sensibles.png)
