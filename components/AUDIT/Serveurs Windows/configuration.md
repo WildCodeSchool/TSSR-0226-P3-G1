@@ -453,10 +453,7 @@ No domains or workgroups were found on your network
 Ce message est apparu malgré les tests effectués depuis le PC Admin et depuis le contrôleur de domaine.
 
 Capture associée :
-
-```text
-09_shareenum_erreur_detection_domaine.png
-```
+![Shareenum](Ressources/ShareEnum.png)
 
 ---
 
