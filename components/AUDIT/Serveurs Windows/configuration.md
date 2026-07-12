@@ -362,29 +362,41 @@ Le résultat RW indique que le groupe GRP-T2-ADMIN dispose des droits en lecture
 
 Ce résultat confirme que le groupe d'administration dispose des permissions nécessaires pour gérer le dossier de partage.
 
-Conclusion :
+### Conclusion :
 
 BILLU\GRP-T2-ADMIN possède bien les droits d'écriture nécessaires sur le dossier K:\Shares\Dossier_partage.
 
 Capture associée :
 
 08_accesschk_grp_t2_admin_racine_rw.png
+
 Synthèse des tests AccessChk
+
 Test	Groupe testé	Chemin audité	Résultat	Conclusion
+
 1	BILLU\Domain Users	K:\Shares\Dossier_partage	No matching objects found	Aucun droit d'écriture direct sur la racine
+
 2	BUILTIN\Administrators	K:\Shares\Dossier_partage	RW	Droits lecture/écriture présents
+
 3	BILLU\GRP-T2-ADMIN	K:\Shares\Dossier_partage	RW	Droits lecture/écriture présents
-Interprétation des résultats
+
+### Interprétation des résultats
 
 Les résultats obtenus montrent que les permissions sont cohérentes :
 
 les utilisateurs du domaine ne disposent pas de droits d'écriture directs sur la racine du partage ;
+
 les administrateurs locaux disposent bien des droits nécessaires ;
+
 le groupe GRP-T2-ADMIN dispose des droits d'administration attendus ;
+
 les droits d'écriture sont réservés aux groupes d'administration ;
+
 les utilisateurs standards sont limités par les permissions NTFS appliquées aux sous-dossiers.
 
+
 Cette configuration respecte le principe du moindre privilège.
+
 
 Complément avec les permissions de partage SMB
 
@@ -399,7 +411,7 @@ Everyone	Non	Non	Non	Groupe supprimé du partage
 
 Cette configuration permet aux utilisateurs du domaine d'accéder au partage réseau, tandis que les droits précis sont ensuite contrôlés par les permissions NTFS.
 
-Conclusion
+### Conclusion
 
 L'audit AccessChk a permis de valider les droits appliqués sur la racine du partage principal du serveur de stockage.
 
