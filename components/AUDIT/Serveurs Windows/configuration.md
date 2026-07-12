@@ -1,6 +1,5 @@
-[**1. Audit des permissions NTFS avec AccessEnum**](#1.-audit-des-permissions-ntfs-avec-accessEnum)
-
-[**2. Audit des permissions avec AccessChk**](#2.-audit-des-permissions-avec-accessChk)
+- [**1. Audit des permissions NTFS avec AccessEnum**](#1-audit-des-permissions-ntfs-avec-accessEnum)
+- [**2. Audit des permissions avec AccessChk**](#2-audit-des-permissions-avec-accessChk)
 
 
 
