@@ -549,7 +549,7 @@ Ce script dont le contenu est malveillant a été bloqué par votre logiciel ant
 
 Malgré la restauration du fichier et la création d'exclusions dans Microsoft Defender, le module a continué à être bloqué au moment de son import.
 
-![exclusion](ressources/Exclusion.png)
+![exclusion](Ressources/Exclusion.png)
 
 Par mesure de sécurité, la protection antivirus n'a pas été désactivée.  
 Il a donc été décidé de réaliser un audit équivalent avec les commandes PowerShell natives de Windows.
