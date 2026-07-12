@@ -60,7 +60,7 @@ Extraction automatisée du Hardening Index et du nombre de warnings/suggestions 
 
 ### 4.1 Synthèse des scores
 
-![warnings avant](/components/AUDIT/Ressources/lynis-warnings-avant.png)
+![warnings avant](/components/AUDIT/Ressources/premiere_synthese.png)
 
 | Serveur | Hardening Index | Warnings | Suggestions |
 |---|---|---|---|
@@ -170,7 +170,7 @@ Redémarrage planifié de l'ensemble des serveurs afin d'appliquer pleinement le
 
 ### 6.1 Synthèse des scores après correctifs
 
-![warnings apres](/components/AUDIT/Ressources/lynis-warnings-apres.png)
+![warnings apres](/components/AUDIT/Ressources/derniere_synthese.png)
 
 | Serveur | Hardening Index (avant → après) | Warnings (avant → après) |
 |---|---|---|
