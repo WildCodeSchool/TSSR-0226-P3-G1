@@ -1,0 +1,29 @@
+$servers = @{
+    "10.0.3.20"      = "Web-Externe"
+    "172.16.130.137" = "Graylog"
+    "10.0.3.10"      = "Mail"
+    "172.16.130.30"  = "FreePBX"
+    "172.16.130.138" = "Intranet-Password-Projet"
+    "172.16.130.239" = "Sauvegarde"
+    "172.16.160.251" = "GLPI"
+}
+
+$outputDir = "$env:USERPROFILE\Documents\audits-lynis"
+New-Item -ItemType Directory -Force -Path $outputDir | Out-Null
+
+foreach ($ip in $servers.Keys) {
+    $name = $servers[$ip]
+    Write-Host "=== Audit de $name ($ip) ===" -ForegroundColor Cyan
+
+    # Détecte le gestionnaire de paquets et installe Lynis si besoin
+    ssh root@$ip "if command -v apt >/dev/null; then which lynis || (apt update -qq && apt install lynis -y -qq); elif command -v dnf >/dev/null; then which lynis || dnf install lynis -y -q; elif command -v yum >/dev/null; then which lynis || yum install epel-release -y -q && yum install lynis -y -q; fi"
+
+    # Lance l'audit
+    ssh root@$ip "lynis audit system --quiet"
+
+    # Rapatrie les rapports
+    scp root@${ip}:/var/log/lynis-report.dat "$outputDir\lynis-report-$name.dat"
+    scp root@${ip}:/var/log/lynis.log "$outputDir\lynis-log-$name.log"
+
+    Write-Host "--- $name terminé ---`n" -ForegroundColor Green
+}
