@@ -84,6 +84,7 @@ K:\Shares\Dossier_partage\Utilisateurs\nom_utilisateur
 
 Le dossier personnel est accessible en écriture uniquement par l'utilisateur concerné et les administrateurs.
 
+![Scan_AccessEnum](Ressources/Scan_AccessEnum.png)
 ---
 
 ### Analyse des dossiers de départements
@@ -158,6 +159,8 @@ La configuration finale du partage est la suivante :
 | `Domain Users` | Non | Oui | Oui | Accès réseau au partage pour les utilisateurs du domaine |
 | `Everyone` | Non | Non | Non | Groupe supprimé du partage |
 
+![Droit_admin](Ressources/Droit_Admin.png)
+![Droit_Domaine_User](Ressources/Droit_Domaine_User.png)
 ---
 
 ### Explication de la configuration
