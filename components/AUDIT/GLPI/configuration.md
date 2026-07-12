@@ -63,10 +63,10 @@ Test des comptes par défaut GLPI (`DEFAULT_PASSWORD_CHECK`) :
 
 | Compte testé | Résultat |
 |---|---|
-| `glpi:glpi` (Super-Admin) | ❌ Échec |
-| `tech:tech` (Technicien) | ❌ Échec |
-| `normal:normal` (Utilisateur normal) | ❌ Échec |
-| `post-only:postonly` (Post-only) | ❌ Échec |
+| `glpi:glpi` (Super-Admin) |  Échec |
+| `tech:tech` (Technicien) |  Échec |
+| `normal:normal` (Utilisateur normal) |  Échec |
+| `post-only:postonly` (Post-only) |  Échec |
 
 **Conclusion** : les identifiants par défaut ont bien été changés. Bonne pratique déjà en place, aucune action requise sur ce point.
 
