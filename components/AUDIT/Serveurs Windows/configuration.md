@@ -1,5 +1,5 @@
 [1. Audit des permissions NTFS avec AccessEnum](Audit-des-permissions-NTFS-avec-AccessEnum)
-
+[**2. Audit des permissions avec AccessChk**](2.-Audit-des-permissions-avec-AccessChk)
 
 
 
@@ -242,4 +242,173 @@ La configuration finale permet donc :
 - une réduction des permissions trop larges.
 
 L'audit est considéré comme conforme aux bonnes pratiques de sécurité Windows Server.
+
+
+## 2. Audit des permissions avec AccessChk
+
+### Objectif
+
+L'objectif de cet audit est de vérifier précisément les droits d'accès appliqués sur le dossier de partage principal du serveur de stockage à l'aide de l'outil `AccessChk`.
+
+Contrairement à AccessEnum, qui donne une vue globale des permissions NTFS, AccessChk permet de tester les droits d'un groupe ou d'un utilisateur précis sur un dossier ciblé.
+
+L'audit permet notamment de vérifier :
+
+- si les utilisateurs du domaine disposent ou non de droits d'écriture sur la racine du partage ;
+- si les administrateurs disposent bien des droits nécessaires ;
+- si le groupe d'administration T2 possède les droits attendus ;
+- si les permissions appliquées sont cohérentes avec la politique de sécurité.
+
+---
+
+### Machine utilisée
+
+L'audit AccessChk a été réalisé directement depuis le serveur de stockage Windows.
+
+Serveur concerné :
+
+```text
+BV-130-153
+``` 
+Dossier audité :
+
+K:\Shares\Dossier_partage
+
+L'outil utilisé est :
+
+accesschk64.exe
+
+Il s'agit de la version 64 bits de l'outil AccessChk de Microsoft Sysinternals.
+
+Emplacement de l'outil
+
+L'outil a été lancé depuis le dossier suivant :
+
+C:\Users\Administrator\Desktop\Audit_Windows\tools
+
+Commande utilisée pour se placer dans le dossier :
+
+cd /d C:\Users\Administrator\Desktop\Audit_Windows\tools
+Test 1 — Vérification des droits d'écriture de Domain Users
+
+Le premier test a consisté à vérifier si le groupe Domain Users disposait de droits d'écriture sur la racine du partage.
+
+Commande utilisée :
+
+accesschk64.exe -accepteula -d -w "BILLU\Domain Users" "K:\Shares\Dossier_partage"
+
+Résultat obtenu :
+
+No matching objects found.
+
+Analyse :
+
+Le résultat No matching objects found indique qu'AccessChk n'a trouvé aucun droit d'écriture pour le groupe Domain Users sur le dossier racine.
+
+Conclusion :
+
+BILLU\Domain Users ne possède pas de droit d'écriture direct sur la racine du partage.
+
+Ce résultat est conforme aux bonnes pratiques, car les utilisateurs du domaine ne doivent pas pouvoir créer ou modifier librement des fichiers directement à la racine du partage.
+
+Capture associée :
+
+06_accesschk_domain_users_racine_no_write.png
+Test 2 — Vérification des droits des administrateurs locaux
+
+Le deuxième test a permis de vérifier que le groupe local BUILTIN\Administrators possède bien les droits nécessaires sur le dossier racine.
+
+Commande utilisée :
+
+accesschk64.exe -accepteula -d -w "BUILTIN\Administrators" "K:\Shares\Dossier_partage"
+
+Résultat obtenu :
+
+RW K:\Shares\Dossier_partage
+
+Analyse :
+
+Le résultat RW signifie :
+
+Lettre	Signification
+R	Read
+W	Write
+
+Le groupe BUILTIN\Administrators dispose donc bien de droits en lecture et en écriture sur le dossier audité.
+
+Conclusion :
+
+Les administrateurs locaux disposent bien des droits nécessaires sur la racine du partage.
+
+Capture associée :
+
+07_accesschk_administrators_racine_rw.png
+Test 3 — Vérification des droits du groupe GRP-T2-ADMIN
+
+Le troisième test a permis de vérifier les droits du groupe d'administration T2 sur le dossier racine.
+
+Commande utilisée :
+
+accesschk64.exe -accepteula -d -w "BILLU\GRP-T2-ADMIN" "K:\Shares\Dossier_partage"
+
+Résultat obtenu :
+
+RW K:\Shares\Dossier_partage
+
+Analyse :
+
+Le résultat RW indique que le groupe GRP-T2-ADMIN dispose des droits en lecture et en écriture sur le dossier racine du partage.
+
+Ce résultat confirme que le groupe d'administration dispose des permissions nécessaires pour gérer le dossier de partage.
+
+Conclusion :
+
+BILLU\GRP-T2-ADMIN possède bien les droits d'écriture nécessaires sur le dossier K:\Shares\Dossier_partage.
+
+Capture associée :
+
+08_accesschk_grp_t2_admin_racine_rw.png
+Synthèse des tests AccessChk
+Test	Groupe testé	Chemin audité	Résultat	Conclusion
+1	BILLU\Domain Users	K:\Shares\Dossier_partage	No matching objects found	Aucun droit d'écriture direct sur la racine
+2	BUILTIN\Administrators	K:\Shares\Dossier_partage	RW	Droits lecture/écriture présents
+3	BILLU\GRP-T2-ADMIN	K:\Shares\Dossier_partage	RW	Droits lecture/écriture présents
+Interprétation des résultats
+
+Les résultats obtenus montrent que les permissions sont cohérentes :
+
+les utilisateurs du domaine ne disposent pas de droits d'écriture directs sur la racine du partage ;
+les administrateurs locaux disposent bien des droits nécessaires ;
+le groupe GRP-T2-ADMIN dispose des droits d'administration attendus ;
+les droits d'écriture sont réservés aux groupes d'administration ;
+les utilisateurs standards sont limités par les permissions NTFS appliquées aux sous-dossiers.
+
+Cette configuration respecte le principe du moindre privilège.
+
+Complément avec les permissions de partage SMB
+
+En complément de l'audit AccessChk, les permissions de partage SMB ont été vérifiées depuis l'interface graphique Windows.
+
+La configuration finale du partage est la suivante :
+
+Groupe	Full Control	Change	Read	Rôle
+GRP-T2-ADMIN	Oui	Oui	Oui	Administration complète du partage
+Domain Users	Non	Oui	Oui	Accès réseau au partage
+Everyone	Non	Non	Non	Groupe supprimé du partage
+
+Cette configuration permet aux utilisateurs du domaine d'accéder au partage réseau, tandis que les droits précis sont ensuite contrôlés par les permissions NTFS.
+
+Conclusion
+
+L'audit AccessChk a permis de valider les droits appliqués sur la racine du partage principal du serveur de stockage.
+
+Les tests montrent que :
+
+Domain Users ne possède pas de droit d'écriture direct sur la racine du partage ;
+BUILTIN\Administrators possède les droits nécessaires ;
+GRP-T2-ADMIN possède les droits de lecture et d'écriture attendus.
+
+L'audit confirme que les droits d'administration sont bien réservés aux groupes appropriés et que les utilisateurs standards ne disposent pas de droits excessifs sur la racine du partage.
+
+Cette phase complète l'audit réalisé avec AccessEnum et permet de confirmer plus précisément les permissions appliquées à certains groupes critiques.
 
