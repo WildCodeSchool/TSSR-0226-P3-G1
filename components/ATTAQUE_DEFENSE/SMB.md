@@ -24,6 +24,9 @@ run
 ```
 
 **Résultat :**
+
+![smb_scan](Ressources/scan_smb.png)
+
 ```text
 [*] 172.16.130.253:445 - SMB Detected (versions: 2, 3) (preferred dialect: SMB 3.1.1)
     (encryption capabilities: AES-256-GCM) (signatures: required)
@@ -50,6 +53,7 @@ run
 ```
 
 **Résultat :**
+
 ```text
 [-] 172.16.130.253:139 - Unable to negotiate SMB1: Not a valid SMB packet
 [-] 172.16.130.253:445 - Error when trying to enumerate shares - STATUS_ACCESS_DENIED
@@ -80,13 +84,8 @@ run
 
 ### 2.4 Tentative de RID cycling — `rpcclient`
 
-```bash
-rpcclient -U "" -N 172.16.130.253
-lookupsids S-1-5-21-3243613150-2389561150-764032268-500
-lookupsids S-1-5-21-3243613150-2389561150-764032268-501
-lookupsids S-1-5-21-3243613150-2389561150-764032268-512
-lookupsids S-1-5-21-3243613150-2389561150-764032268-513
-```
+![anonymous](Ressources/anonymous.png)
+
 
 **Résultat :** la connexion RPC s'établit, mais chaque tentative de résolution renvoie :
 ```text
@@ -119,16 +118,8 @@ run
 ```
 
 **Résultat :**
-```text
-[+] 172.16.130.253:445 - ADMIN$    - (DISK|SPECIAL) Remote Admin
-[+] 172.16.130.253:445 - C$        - (DISK|SPECIAL) Default share
-[+] 172.16.130.253:445 - CertEnroll - (DISK) Active Directory Certificate Services share
-[+] 172.16.130.253:445 - IPC$      - (IPC|SPECIAL) Remote IPC
-[+] 172.16.130.253:445 - mail      - (DISK)
-[+] 172.16.130.253:445 - NETLOGON  - (DISK) Logon server share
-[+] 172.16.130.253:445 - SYSVOL    - (DISK) Logon server share
-[+] 172.16.130.253:445 - Users     - (DISK)
-```
+
+![logged](Ressources/logged.png)
 
 ➡️ **Changement radical par rapport à l'anonyme** : dès qu'un compte standard est authentifié, la liste complète des partages devient visible, y compris les partages "métier" (`mail`, `Users`) et le partage lié à la PKI d'entreprise (`CertEnroll`).
 
@@ -139,6 +130,8 @@ smbmap -H 172.16.130.253 -u rmartinez -p 'Azerty123!*'
 ```
 
 **Résultat :**
+
+![smbmap](Ressources/smb_map.png)
 
 | Partage | Permissions | Commentaire |
 | :-- | :-- | :-- |
