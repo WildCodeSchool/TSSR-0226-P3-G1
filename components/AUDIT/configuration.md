@@ -529,7 +529,6 @@ BV-TEST-01  CN=BV-TEST-01,OU=Serveurs,OU=BU_Computers,DC=BillU,DC=lan
 ## Résultat
 
 | Element | Avant | Après |
-
 | --- | --- | --- |
 | Placement des ordinateurs | Manuel, machines oubliées dans CN=Computers | Automatique selon nom (`BV-`/`PC-`/`ADM-`) et attribut `description` |
 | Application des GPO machines | Impossible dans le conteneur Computers | Garantie dès le tri dans les OU |
